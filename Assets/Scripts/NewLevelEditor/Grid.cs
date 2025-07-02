@@ -19,8 +19,8 @@ namespace WoodPuzzle
 
         private void Awake()
         {
-            cubePrefab = LevelEditorA.Instance.cubePrefab;
-            exitPrefab = LevelEditorA.Instance.exitPrefab;
+            cubePrefab = LevelEditorA.Instance().cubePrefab;
+            exitPrefab = LevelEditorA.Instance().exitPrefab;
             gridRenderer = GetComponent<Renderer>();
         }
 
@@ -34,12 +34,12 @@ namespace WoodPuzzle
 
         public void setTile()
         {
-            gridRenderer.material.color = LevelEditorA.Instance.tileGridColor;
+            gridRenderer.material.color = LevelEditorA.Instance().optionToColor[LevelEditorA.Instance().tileGridColor];
         }
 
         public void emptyGrid()
         {
-            gridRenderer.material.color = LevelEditorA.Instance.emptyGridColor;
+            gridRenderer.material.color = LevelEditorA.Instance().emptyGridColor;
         }
 
         public void addCube(CubeData cubeData, Grid referenceGrid, BlockData blockdata)
@@ -52,7 +52,7 @@ namespace WoodPuzzle
             ObjectColor colorKey;
             Enum.TryParse(cubeData.objectColor.ToString().Replace("Metal", ""), out colorKey);
 
-            Color cubeColor = LevelEditorA.Instance.colorDict[colorKey];
+            Color cubeColor = LevelEditorA.Instance().colorDict[colorKey];
             cube.GetComponent<Renderer>().material.color = cubeColor;
 
             Movement movement = blockdata.movement;
@@ -126,7 +126,7 @@ namespace WoodPuzzle
 
             foreach (Transform part in exit.transform)
             {
-                part.GetComponent<Renderer>().material.color = LevelEditorA.Instance.colorDict[colorKey];
+                part.GetComponent<Renderer>().material.color = LevelEditorA.Instance().colorDict[colorKey];
             }
 
             float degree = ((int)exitData.direction * 90);
@@ -152,7 +152,7 @@ namespace WoodPuzzle
     
         public void addObstacle()
         {
-            gridRenderer.material.color = LevelEditorA.Instance.obstacleGridColor;
+            gridRenderer.material.color = LevelEditorA.Instance().obstacleGridColor;
         }
 
         public void removeObstacle()

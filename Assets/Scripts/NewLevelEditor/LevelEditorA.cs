@@ -45,13 +45,13 @@ namespace WoodPuzzle
         public TextMeshPro rulerTextPrefab;
 
         public Color emptyGridColor;
-        public Color tileGridColor;
+        public ColorOption tileGridColor;
         public Color obstacleGridColor;
 
         public Dictionary<ObjectColor, Color> colorDict = new Dictionary<ObjectColor, Color>
         {
             {ObjectColor.Colorless, new Color32(255, 255, 255, 255) },
-            {ObjectColor.Red, new Color32(155, 53, 51,255)},
+            {ObjectColor.Red, new Color32(255, 0, 0,255)},
             { ObjectColor.Blue, new Color32(60, 136, 170,255)},
             {ObjectColor.Green, Color.green },
             {ObjectColor.Yellow, Color.yellow },
@@ -59,7 +59,23 @@ namespace WoodPuzzle
             { ObjectColor.Pink, new Color32( 255, 105, 180, 255)},
             { ObjectColor.DarkBlue, new Color32(0, 0, 139, 255)},
             { ObjectColor.Brown, new Color32(150, 75, 0, 255)},
+        };
 
+        public enum ColorOption
+        {
+            Red, Blue, Green, Yellow, Purple, Pink, DarkBlue, Brown
+        }
+
+        public Dictionary<ColorOption, Color> optionToColor = new Dictionary<ColorOption, Color>
+        {
+            {ColorOption.Red, new Color32(155, 53, 51,255)},
+            { ColorOption.Blue, new Color32(60, 136, 170,255)},
+            {ColorOption.Green, Color.green },
+            {ColorOption.Yellow, Color.yellow },
+            { ColorOption.Purple, new Color32(160, 32, 240,255)},
+            { ColorOption.Pink, new Color32( 255, 105, 180, 255)},
+            { ColorOption.DarkBlue, new Color32(0, 0, 139, 255)},
+            { ColorOption.Brown, new Color32(150, 75, 0, 255)},
         };
         
         private void Start()
@@ -70,7 +86,7 @@ namespace WoodPuzzle
         
         private void Update()
         {
-            if (Input.GetMouseButton(0) && !IsPointerOverUIObject())
+            if (Input.GetMouseButton(0) && !IsPointerOverUIObject() )
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -468,6 +484,11 @@ namespace WoodPuzzle
         }
         
         private bool IsPointerOverUIObject() {
+            if (EventSystem.current == null)
+            {
+                Debug.Log("Event system does not exist!");
+                return false;
+            }
             PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
             eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             List<RaycastResult> results = new List<RaycastResult>();
