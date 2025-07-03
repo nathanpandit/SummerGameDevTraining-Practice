@@ -10,8 +10,7 @@ namespace WoodPuzzle
     {
         public Vector2Int position;
         public Renderer gridRenderer;
-
-        public GameObject cube;
+        
         GameObject exit;
 
         private void Awake()
