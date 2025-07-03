@@ -149,6 +149,7 @@ namespace WoodPuzzle
             levelData = new LevelData()
             {
                 tileData = new List<TileData>(),
+                sizeOfLevel = mapSize
             };
 
             AddRulers();
@@ -182,18 +183,19 @@ namespace WoodPuzzle
         public void LoadLevel()
         {
             //Generate Level From LevelData
-            GenerateGrid();
-            Debug.Log(level);
             TextAsset jsonFile = Resources.Load<TextAsset>($"Levels/Level_{level}");
             if (!jsonFile)
             {
                 Debug.Log("JSON file is null");
             }
             levelData = JsonUtility.FromJson<LevelData>(jsonFile.text);
+            mapSize = levelData.sizeOfLevel;
+            LevelData tempData = levelData;
+            GenerateGrid();
+            levelData = tempData;
             Debug.Log($"Level {level} loaded:\n{jsonFile.text}");
 
             timeLimit = levelData.timeLimit;
-            
             var cells = tileParent.GetComponentsInChildren<Grid>();
             foreach (var tile in levelData.tileData)
             {

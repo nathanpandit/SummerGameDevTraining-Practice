@@ -9,6 +9,7 @@ namespace WoodPuzzle
     {
         public List<TileData> tileData = new List<TileData>();
         public int timeLimit;
+        public Vector2Int sizeOfLevel;
     }
     
 
