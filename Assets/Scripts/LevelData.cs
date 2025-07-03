@@ -18,7 +18,7 @@ namespace WoodPuzzle
     public class TileData
     {
         public Vector2Int position;
-        public bool hasObstacle;
+        public Color color;
     }
 
     [Serializable]

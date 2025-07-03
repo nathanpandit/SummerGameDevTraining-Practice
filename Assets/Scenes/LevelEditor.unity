@@ -372,7 +372,7 @@ MonoBehaviour:
   count: 0
   timeLimit: 200
   material: 0
-  mapSize: {x: 6, y: 6}
+  mapSize: {x: 9, y: 9}
   level: 1
   tileParent: {fileID: 407823053}
   rulersParent: {fileID: 221675700259299108, guid: d9a407019db245f45b1caed2e1eb1764, type: 3}
@@ -380,8 +380,8 @@ MonoBehaviour:
   cubePrefab: {fileID: 3387172563484524918, guid: db04c50eced6a7940bbdc86c246db6f8, type: 3}
   exitPrefab: {fileID: 7194979039586673615, guid: 3014866f8cace7b4f8a0ad76cc0b358c, type: 3}
   rulerTextPrefab: {fileID: 494014749802302348, guid: d9a407019db245f45b1caed2e1eb1764, type: 3}
-  emptyGridColor: {r: 0.5622641, g: 0.5421074, b: 0.5421074, a: 1}
-  tileGridColor: {r: 0.48266995, g: 0.6679245, b: 0.48266995, a: 1}
+  emptyGridColor: {r: 1, g: 1, b: 1, a: 1}
+  tileGridColor: 0
   obstacleGridColor: {r: 0.22264141, g: 0.06472237, b: 0.056710523, a: 1}
 --- !u!4 &1201609720
 Transform:

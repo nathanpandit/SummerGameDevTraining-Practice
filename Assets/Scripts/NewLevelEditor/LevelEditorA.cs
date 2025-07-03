@@ -45,8 +45,7 @@ namespace WoodPuzzle
         public TextMeshPro rulerTextPrefab;
 
         public Color emptyGridColor;
-        public ColorOption tileGridColor;
-        public Color obstacleGridColor;
+        public ObjectColor tileGridColor;
 
         public Dictionary<ObjectColor, Color> colorDict = new Dictionary<ObjectColor, Color>
         {
@@ -61,23 +60,6 @@ namespace WoodPuzzle
             { ObjectColor.Brown, new Color32(150, 75, 0, 255)},
         };
 
-        public enum ColorOption
-        {
-            Red, Blue, Green, Yellow, Purple, Pink, DarkBlue, Brown
-        }
-
-        public Dictionary<ColorOption, Color> optionToColor = new Dictionary<ColorOption, Color>
-        {
-            {ColorOption.Red, new Color32(155, 53, 51,255)},
-            { ColorOption.Blue, new Color32(60, 136, 170,255)},
-            {ColorOption.Green, Color.green },
-            {ColorOption.Yellow, Color.yellow },
-            { ColorOption.Purple, new Color32(160, 32, 240,255)},
-            { ColorOption.Pink, new Color32( 255, 105, 180, 255)},
-            { ColorOption.DarkBlue, new Color32(0, 0, 139, 255)},
-            { ColorOption.Brown, new Color32(150, 75, 0, 255)},
-        };
-        
         private void Start()
         {
             GenerateGrid();
@@ -99,7 +81,7 @@ namespace WoodPuzzle
                         {
                             TileData tileData = new TileData();
                             tileData.position = grid.position;
-                            tileData.hasObstacle = false;
+                            tileData.color = grid.gridRenderer.material.color;
                             //if exist find and update data in list
                             if (levelData.tileData.Exists(x => x.position == tileData.position))
                             {
@@ -152,19 +134,6 @@ namespace WoodPuzzle
                                     grid.addCube(cubeData, referenceGrid, blockData);
                                 }
                             }
-                        }
-                        else if (objectType == ObjectType.Obstacle)
-                        {
-                            if (levelData.tileData.Exists(x => x.position == grid.position))
-                            {
-                                levelData.tileData.RemoveAll(x => x.position == grid.position);
-                            }
-                            TileData tileData = new TileData();
-                            tileData.position = grid.position;
-                            tileData.hasObstacle = true;
-                            levelData.tileData.Add(tileData);
-
-                            grid.addObstacle();
                         }
                     }
                 }
@@ -222,7 +191,6 @@ namespace WoodPuzzle
 
                                 TileData tileData = new TileData();
                                 tileData.position = grid.position;
-                                tileData.hasObstacle = false;
                                 levelData.tileData.Add(tileData);
 
                                 grid.removeObstacle();
@@ -411,8 +379,12 @@ namespace WoodPuzzle
         {
             //Generate Level From LevelData
             GenerateGrid();
-            
+            Debug.Log(level);
             TextAsset jsonFile = Resources.Load<TextAsset>($"Levels/Level_{level}");
+            if (!jsonFile)
+            {
+                Debug.Log("JSON file is null");
+            }
             levelData = JsonUtility.FromJson<LevelData>(jsonFile.text);
             Debug.Log($"Level {level} loaded:\n{jsonFile.text}");
 
@@ -424,14 +396,7 @@ namespace WoodPuzzle
                 var grid = cells.FirstOrDefault(x => x.position == tile.position);
                 if (grid != null)
                 {
-                    if (tile.hasObstacle)
-                    {
-                        grid.addObstacle();
-                    }
-                    else
-                    {
-                        grid.setTile();
-                    }
+                    grid.gridRenderer.material.color = tile.color;
                 }
             }
             foreach (var block in levelData.blockData)

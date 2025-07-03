@@ -9,7 +9,7 @@ namespace WoodPuzzle
     public class Grid : MonoBehaviour
     {
         public Vector2Int position;
-        Renderer gridRenderer;
+        public Renderer gridRenderer;
 
         GameObject cubePrefab;
         GameObject exitPrefab;
@@ -34,7 +34,7 @@ namespace WoodPuzzle
 
         public void setTile()
         {
-            gridRenderer.material.color = LevelEditorA.Instance().optionToColor[LevelEditorA.Instance().tileGridColor];
+            gridRenderer.material.color = LevelEditorA.Instance().colorDict[LevelEditorA.Instance().tileGridColor];
         }
 
         public void emptyGrid()
@@ -150,10 +150,12 @@ namespace WoodPuzzle
             }
         }
     
+        /*
         public void addObstacle()
         {
             gridRenderer.material.color = LevelEditorA.Instance().obstacleGridColor;
         }
+        */
 
         public void removeObstacle()
         {
