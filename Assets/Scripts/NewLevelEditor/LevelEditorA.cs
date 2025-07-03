@@ -13,9 +13,7 @@ namespace WoodPuzzle
 
         private LevelData levelData = new LevelData()
         {
-            tileData = new List<TileData>(),
-            exitData = new List<ExitData>(),
-            blockData = new List<BlockData>()
+            tileData = new List<TileData>()
         };
         
         private ObjectType objectType;
@@ -30,7 +28,6 @@ namespace WoodPuzzle
         [Range(-1, 300)]
         public int timeLimit;
         
-        private bool hasKey;
         private bool isMetal;
         public ObjectMaterial material;
 
@@ -40,8 +37,6 @@ namespace WoodPuzzle
         public Transform tileParent;
         public Transform rulersParent;
         public Grid gridPrefab;
-        public GameObject cubePrefab;
-        public GameObject exitPrefab;
         public TextMeshPro rulerTextPrefab;
 
         public Color emptyGridColor;
@@ -79,6 +74,7 @@ namespace WoodPuzzle
                     {
                         if (objectType == ObjectType.Tile)
                         {
+                            grid.setTile();
                             TileData tileData = new TileData();
                             tileData.position = grid.position;
                             tileData.color = grid.gridRenderer.material.color;
@@ -88,52 +84,7 @@ namespace WoodPuzzle
                                 levelData.tileData.RemoveAll(x => x.position == tileData.position);
                             }
                             levelData.tileData.Add(tileData);
-                            grid.setTile();
-                        }
-                        else if (objectType == ObjectType.Exit)
-                        {
-                            if (levelData.exitData.Exists(x => x.position == grid.position))
-                            {
-                                levelData.exitData.RemoveAll(x => x.position == grid.position);
-                            }
-                            ExitData exitData = new ExitData();
-                            exitData.position = grid.position;
-                            exitData.direction = direction;
-                            exitData.exitColor = objectColor;
-                            exitData.material = material;
-                            levelData.exitData.Add(exitData);
-                            grid.addExit(exitData, grid);
-                        }
-                        else if (objectType == ObjectType.Block)
-                        {
-                            if (!referenceGrid)
-                            {
-                                referenceGrid = grid;
-                                BlockData blockData = new BlockData();
-                                blockData.originPos = grid.position;
-                                blockData.cubeData = new List<CubeData>();
-                                blockData.movement = movement;
-                                blockData.counter = count;
-                                levelData.blockData.Add(blockData);
-                            }
-                            else
-                            {
-                                var blockData = levelData.blockData.FirstOrDefault(x => x.originPos == referenceGrid.position);
-                                if (blockData != null)
-                                {
-                                    if (blockData.cubeData.Exists(x => x.position == grid.position))
-                                    {
-                                        blockData.cubeData.RemoveAll(x => x.position == grid.position);
-                                    }
-                                    CubeData cubeData = new CubeData();
-                                    cubeData.position = grid.position;
-                                    cubeData.objectColor = objectColor;
-                                    cubeData.hasKey = hasKey;
-                                    cubeData.material = material;
-                                    blockData.cubeData.Add(cubeData);
-                                    grid.addCube(cubeData, referenceGrid, blockData);
-                                }
-                            }
+                            
                         }
                     }
                 }
@@ -152,53 +103,6 @@ namespace WoodPuzzle
                             levelData.tileData.RemoveAll(x => x.position == grid.position);
                             grid.emptyGrid();
                         }
-
-                        if (objectType == ObjectType.Block)
-                        {
-
-                            foreach (BlockData blockData in levelData.blockData)
-                            {
-                                blockData.cubeData.RemoveAll(x => x.position == grid.position);
-
-                            }
-                            grid.removeCube();
-
-                            levelData.blockData.RemoveAll(x => x.cubeData.Count == 0);
-                            
-
-                            if((referenceGrid != null) && (!levelData.blockData.Any( x => x.originPos == referenceGrid.position)))
-                            {
-                                referenceGrid = null;
-
-                            }
-                        }
-                        if (objectType == ObjectType.Exit)
-                        {
-                            levelData.exitData.RemoveAll(x => x.position == grid.position);
-
-                            grid.removeExit();
-                        }
-
-                        if (objectType == ObjectType.Obstacle)
-                        {
-                            if(levelData.tileData.Exists(x=> x.position == grid.position))
-                            {
-
-                                if (levelData.tileData.Exists(x => x.position == grid.position))
-                                {
-                                    levelData.tileData.RemoveAll(x => x.position == grid.position);
-                                }
-
-                                TileData tileData = new TileData();
-                                tileData.position = grid.position;
-                                levelData.tileData.Add(tileData);
-
-                                grid.removeObstacle();
-
-                            }
-
-                        }
-
                     }
                 }
             }
@@ -266,10 +170,6 @@ namespace WoodPuzzle
             {
                 movement = Movement.Locked;
             }
-            else if (Input.GetKeyDown(KeyCode.A))
-            {
-                hasKey = !hasKey;
-            }
             else if (Input.GetKeyDown(KeyCode.M))
             {
 
@@ -328,13 +228,13 @@ namespace WoodPuzzle
         
         private void GenerateGrid()
         {
-            if (tileParent) UnityEngine.Object.Destroy(tileParent.gameObject);
+            if (tileParent) Destroy(tileParent.gameObject);
             tileParent = new GameObject("TileParent").transform;
             for (int i = 0; i < mapSize.x; i++)
             {
                 for (int j = 0; j < mapSize.y; j++)
                 {
-                    Grid grid = UnityEngine.Object.Instantiate(gridPrefab, new Vector3(i, 0, j), Quaternion.identity, parent: tileParent);
+                    Grid grid = Instantiate(gridPrefab, new Vector3(i, 0, j), Quaternion.identity, parent: tileParent);
                     grid.Initialize(new Vector2Int(i, j));
                 }
             }
@@ -342,8 +242,6 @@ namespace WoodPuzzle
             levelData = new LevelData()
             {
                 tileData = new List<TileData>(),
-                exitData = new List<ExitData>(),
-                blockData = new List<BlockData>()
             };
 
             AddRulers();
@@ -399,44 +297,24 @@ namespace WoodPuzzle
                     grid.gridRenderer.material.color = tile.color;
                 }
             }
-            foreach (var block in levelData.blockData)
-            {
-                var referance = cells.FirstOrDefault(x => x.position == block.originPos);
-                foreach (var cube in block.cubeData)
-                {
-                    var grid = cells.FirstOrDefault(x => x.position == cube.position);
-                    if (grid != null)
-                    {
-                        grid.addCube(cube, referance, block);
-                    }
-                }
-            }
-            foreach (var exit in levelData.exitData)
-            {
-                var grid = cells.FirstOrDefault(x => x.position == exit.position);
-                if (grid != null)
-                {
-                    grid.addExit(exit, grid);
-                }
-            }
         }
 
 
         void AddRulers()
         {
-            if(rulersParent) { UnityEngine.Object.Destroy(rulersParent.gameObject); }
+            if(rulersParent) { Destroy(rulersParent.gameObject); }
             rulersParent =  new GameObject("RulerParent").transform;
 
             for(int x = 0; x < mapSize.x; x++)
             {
-                TextMeshPro number = UnityEngine.Object.Instantiate(rulerTextPrefab, position: new Vector3(x + 1, 0, -1), Quaternion.identity, rulersParent);
+                TextMeshPro number = Instantiate(rulerTextPrefab, position: new Vector3(x + 1, 0, -1), Quaternion.identity, rulersParent);
                 number.SetText(x.ToString());
                 number.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
                 number.gameObject.name = $"X: {x}";
             }
             for(int y = 0; y < mapSize.y; y++)
             {
-                TextMeshPro number = UnityEngine.Object.Instantiate(rulerTextPrefab, position: new Vector3(0, 0, y), Quaternion.identity, rulersParent);
+                TextMeshPro number = Instantiate(rulerTextPrefab, position: new Vector3(0, 0, y), Quaternion.identity, rulersParent);
                 number.SetText(y.ToString());
                 number.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
                 number.gameObject.name = $"Y: {y}";

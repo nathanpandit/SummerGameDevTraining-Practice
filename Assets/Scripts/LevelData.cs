@@ -8,8 +8,6 @@ namespace WoodPuzzle
     public class LevelData
     {
         public List<TileData> tileData = new List<TileData>();
-        public List<ExitData> exitData = new List<ExitData>();
-        public List<BlockData> blockData = new List<BlockData>();
         public int timeLimit;
     }
     
@@ -19,33 +17,6 @@ namespace WoodPuzzle
     {
         public Vector2Int position;
         public Color color;
-    }
-
-    [Serializable]
-    public class ExitData
-    {
-        public ObjectMaterial material;
-        public Vector2Int position;
-        public Direction direction;
-        public ObjectColor exitColor;
-    }
-    
-    [Serializable]
-    public class BlockData
-    {
-        public Vector2Int originPos;
-        public List<CubeData> cubeData = new List<CubeData>(); 
-        public Movement movement;
-        public int counter;
-    }
-    
-    [Serializable]
-    public class CubeData
-    {
-        public bool hasKey;
-        public ObjectMaterial material;
-        public Vector2Int position;
-        public ObjectColor objectColor;
     }
 
     [Serializable]
