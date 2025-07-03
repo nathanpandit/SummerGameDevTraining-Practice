@@ -17,13 +17,7 @@ namespace WoodPuzzle
         };
         
         private ObjectType objectType;
-        private Movement movement;
         private ObjectColor objectColor;
-        private Direction direction;
-        private Grid referenceGrid = null;
-
-        [Range(0,60)]
-        public int count;
 
         [Range(-1, 300)]
         public int timeLimit;
@@ -84,7 +78,6 @@ namespace WoodPuzzle
                                 levelData.tileData.RemoveAll(x => x.position == tileData.position);
                             }
                             levelData.tileData.Add(tileData);
-                            
                         }
                     }
                 }
@@ -107,21 +100,8 @@ namespace WoodPuzzle
                 }
             }
             int key;
-            if (Input.GetKeyDown(KeyCode.Keypad0)) count = 0;
-            else if (Input.GetKeyDown(KeyCode.Keypad1)) count = 1;
-            else if (Input.GetKeyDown(KeyCode.Keypad2)) count = 2;
-            else if (Input.GetKeyDown(KeyCode.Keypad3)) count = 3;
-            else if (Input.GetKeyDown(KeyCode.Keypad4)) count = 4;
-            else if (Input.GetKeyDown(KeyCode.Keypad5)) count = 5;
-            else if (Input.GetKeyDown(KeyCode.Keypad6)) count = 6;
-            else if (Input.GetKeyDown(KeyCode.Keypad7)) count = 7;
-            else if (Input.GetKeyDown(KeyCode.Keypad8)) count = 8;
-            else if (Input.GetKeyDown(KeyCode.Keypad9))
-            {
 
-                count = 9;
-            }
-            else if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.S))
             {
                 SaveData();
             }
@@ -133,46 +113,9 @@ namespace WoodPuzzle
             {
                 ResetLevel();
             }
-            else if (Input.GetKeyDown(KeyCode.T))
-            {
-                objectType = ObjectType.Tile;
-            }
-            else if (Input.GetKeyDown(KeyCode.E))
-            {
-                objectType = ObjectType.Exit;
-            }
-            else if (Input.GetKeyDown(KeyCode.B))
-            {
-                referenceGrid = null;
-                objectType = ObjectType.Block;
-            }
-            else if (Input.GetKeyDown(KeyCode.O))
-            {
-                objectType = ObjectType.Obstacle;
-            }
-            else if (Input.GetKeyDown(KeyCode.H))
-            {
-                movement = Movement.Horizontal;
-            }
-            else if (Input.GetKeyDown(KeyCode.V))
-            {
-                movement = Movement.Vertical;
-            }
-            else if (Input.GetKeyDown(KeyCode.F))
-            {
-                movement = Movement.Free;
-            }
-            else if (Input.GetKeyDown(KeyCode.Z))
-            {
-                movement = Movement.Ice;
-            }
-            else if (Input.GetKeyDown(KeyCode.K))
-            {
-                movement = Movement.Locked;
-            }
+            /* currently not using any materials
             else if (Input.GetKeyDown(KeyCode.M))
             {
-
                 int currentMaterial = (int)material;
                 int materialCount = Enum.GetNames(typeof(ObjectMaterial)).Length;
                 int nextMaterial = (currentMaterial + 1) % materialCount;
@@ -180,49 +123,13 @@ namespace WoodPuzzle
                 material = (ObjectMaterial)nextMaterial;
                 
             }
-            else if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                direction = Direction.Up;
-            }
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                direction = Direction.Right;
-            }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                direction = Direction.Down;
-            }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                direction = Direction.Left;
-            }
+            */
             else if (int.TryParse(Input.inputString, out key))
             {
                 objectColor = (ObjectColor)(key - 1);
-
-                if (isMetal)
-                {
-                    string metalName = "Metal" + objectColor.ToString();
-                    if (Enum.TryParse(metalName, out objectColor))
-                    {
-                        Debug.Log($"Metalization successful for {objectColor.ToString()}");
-                    }
-                    else
-                    {
-                        Debug.Log($"Couldn't find the color '{metalName}'");
-                    }
-                }
-
                 Debug.Log($"Color name is {objectColor.ToString()}");
+                tileGridColor = objectColor;
 
-            }
-            else if (Input.GetKeyDown(KeyCode.KeypadPlus))
-            {
-                count++;
-            }
-            else if (Input.GetKeyDown(KeyCode.KeypadMinus))
-            {
-                count--;
             }
         }
         
@@ -245,9 +152,8 @@ namespace WoodPuzzle
             };
 
             AddRulers();
-
-            ///CAMERA
-            ///
+            
+            /* Camera */
 
             Vector3 cameraCenter = new Vector3(mapSize.x/ 2, 5, (mapSize.y/ 2) - 1);
 
@@ -320,7 +226,7 @@ namespace WoodPuzzle
                 number.gameObject.name = $"Y: {y}";
             }
         }
-        
+
         public void ResetLevel()
         {
             GenerateGrid();

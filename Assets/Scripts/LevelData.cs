@@ -42,21 +42,9 @@ namespace WoodPuzzle
         Colorless
     }
     [Serializable]
-    public enum Movement
-    {
-        Free,
-        Horizontal,
-        Vertical,
-        Ice,
-        Locked,
-    }
-    [Serializable]
     public enum ObjectType
     {
-        Tile,
-        Block,
-        Exit,
-        Obstacle
+        Tile
     }
     [Serializable]
     public enum ObjectMaterial
