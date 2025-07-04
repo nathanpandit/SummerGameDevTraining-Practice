@@ -20,7 +20,6 @@ namespace WoodPuzzle
         private ObjectColor objectColor;
 
         [Range(-1, 300)]
-        public int timeLimit;
         
         private bool isMetal;
         public ObjectMaterial material;
@@ -169,7 +168,6 @@ namespace WoodPuzzle
         
         public void SaveData()
         {
-            levelData.timeLimit = timeLimit;
             string saveData = JsonUtility.ToJson(levelData);
             string filePath = Application.dataPath + $"/Resources/Levels/Level_{level}.json";
             System.IO.File.WriteAllText(filePath, saveData);
@@ -186,16 +184,20 @@ namespace WoodPuzzle
             TextAsset jsonFile = Resources.Load<TextAsset>($"Levels/Level_{level}");
             if (!jsonFile)
             {
-                Debug.Log("JSON file is null");
+                Debug.Log("Creating new level...");
+                GenerateGrid();
+                Debug.Log("New level generated!");
             }
-            levelData = JsonUtility.FromJson<LevelData>(jsonFile.text);
-            mapSize = levelData.sizeOfLevel;
-            LevelData tempData = levelData;
-            GenerateGrid();
-            levelData = tempData;
-            Debug.Log($"Level {level} loaded:\n{jsonFile.text}");
+            else
+            {
+                levelData = JsonUtility.FromJson<LevelData>(jsonFile.text);
+                mapSize = levelData.sizeOfLevel;
+                LevelData tempData = levelData;
+                GenerateGrid();
+                levelData = tempData;
+                Debug.Log($"Level {level} loaded:\n{jsonFile.text}");
+            }
 
-            timeLimit = levelData.timeLimit;
             var cells = tileParent.GetComponentsInChildren<Grid>();
             foreach (var tile in levelData.tileData)
             {
