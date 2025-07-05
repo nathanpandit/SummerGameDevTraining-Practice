@@ -191,6 +191,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &101113233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 101113235}
+  - component: {fileID: 101113234}
+  m_Layer: 0
+  m_Name: LevelGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &101113234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101113233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cebf5276cb5d360438db7a5e0bf90a82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilePrefab: {fileID: -2331820405305684121, guid: 3b615b65cee057649afea842c988617f, type: 3}
+  levelHelper: {fileID: 1995593899}
+--- !u!4 &101113235
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101113233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.775517, y: 3.0088472, z: 3.5604682}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &407823052
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,7 +321,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 107
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -356,7 +402,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1201609719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,15 +415,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f8d65e8f0db428587d55110cb51c8f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 300
   material: 0
-  mapSize: {x: 10, y: 10}
+  mapSize: {x: 12, y: 12}
   level: 1
   tileParent: {fileID: 407823053}
   rulersParent: {fileID: 221675700259299108, guid: d9a407019db245f45b1caed2e1eb1764, type: 3}
   gridPrefab: {fileID: 7040558723191821433, guid: cea550f3c56b4344498f466a74da143b, type: 3}
   rulerTextPrefab: {fileID: 494014749802302348, guid: d9a407019db245f45b1caed2e1eb1764, type: 3}
-  emptyGridColor: {r: 0.754717, g: 0.26628694, b: 0.26628694, a: 0}
+  emptyGridColor: {r: 1, g: 1, b: 1, a: 0}
   tileGridColor: 0
 --- !u!4 &1201609720
 Transform:
@@ -393,6 +438,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1995593898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1995593900}
+  - component: {fileID: 1995593899}
+  m_Layer: 0
+  m_Name: LevelHelper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1995593899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995593898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bc744fdd286f2498b48263ea20a713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1995593900
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995593898}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.775517, y: 3.0088472, z: 3.5604682}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2020766951
 GameObject:

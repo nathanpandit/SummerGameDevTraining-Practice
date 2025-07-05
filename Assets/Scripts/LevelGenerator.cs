@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+namespace WoodPuzzle
+{
+    public class LevelGenerator : MonoBehaviour
+    {
+        private LevelData levelData;
+        public Tile tilePrefab;
+        public LevelHelper levelHelper;
+        private GameObject tutorialObject => Resources.Load<GameObject>("TutorialObject");
+        public int level;
+        public GameObject levelParent;
+
+        private void Start()
+        {
+            level = 1;
+            Application.targetFrameRate = 60;
+            ReadLevelData();
+            var data = GenerateLevel();
+
+            /*if (levelHelper.GetCurrentLevel() == 1)
+            {
+                Instantiate(tutorialObject, new Vector3(0, 0, 0), Quaternion.identity);
+            } */
+            // DragHelper.Initialize(data.tiles);
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                level++; 
+                Application.targetFrameRate = 60;
+                ReadLevelData();
+                var data = GenerateLevel();
+            }
+
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                level--;
+                Application.targetFrameRate = 60;
+                ReadLevelData();
+                var data = GenerateLevel();
+            }
+        }
+        
+        private void ReadLevelData()
+        {
+            var levelIndex = level;
+            string json = Resources.Load<TextAsset>($"Levels/Level_{levelIndex}").text;
+            levelData = JsonUtility.FromJson<LevelData>(json);
+        }
+        
+        private List<Tile> GenerateLevel()
+        {
+            if (levelParent)
+            {
+                Destroy(levelParent);
+            }
+            levelParent = new GameObject("Level");
+
+
+            /* adjust camera */
+            Vector3 cameraCenter = new Vector3((float)levelData.sizeOfLevel.x/2 - 0.5f, 5, (float)levelData.sizeOfLevel.y/2 - 0.5f);
+            Camera.main.transform.position = cameraCenter;
+            if (levelData.sizeOfLevel.x > levelData.sizeOfLevel.y)
+            {
+                Camera.main.orthographicSize = (float)levelData.sizeOfLevel.x / 2 + 0.5f;
+            }
+            else
+            {
+                Camera.main.orthographicSize = (float)levelData.sizeOfLevel.y / 2 + 0.5f;
+            }
+
+            var tileParent = new GameObject("Tiles");
+            tileParent.transform.SetParent(levelParent.transform);
+            var tiles = new List<Tile>();
+            foreach (var tileData in levelData.tileData)
+            {
+                var tile = Instantiate(tilePrefab, new Vector3(tileData.position.x, 0, tileData.position.y), Quaternion.identity, tileParent.transform);
+                tile.Initialize(tileData);
+                tiles.Add(tile);
+            }
+            
+            return tiles;
+        }
+
+        void destroyLevel(List<Tile> tiles)
+        {
+            foreach (var tile in tiles)
+            {
+                Destroy(tile);
+            }
+        }
+    }
+}

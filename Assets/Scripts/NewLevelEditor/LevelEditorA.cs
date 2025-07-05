@@ -137,26 +137,30 @@ namespace WoodPuzzle
         {
             if (tileParent) Destroy(tileParent.gameObject);
             tileParent = new GameObject("TileParent").transform;
+            levelData = new LevelData()
+            {
+                tileData = new List<TileData>(),
+                sizeOfLevel = mapSize
+            };
             for (int i = 0; i < mapSize.x; i++)
             {
                 for (int j = 0; j < mapSize.y; j++)
                 {
                     Grid grid = Instantiate(gridPrefab, new Vector3(i, 0, j), Quaternion.identity, parent: tileParent);
                     grid.Initialize(new Vector2Int(i, j));
+                    TileData newTileData = new TileData();
+                    newTileData.position = grid.position;
+                    levelData.tileData.Add(newTileData);
                 }
             }
 
-            levelData = new LevelData()
-            {
-                tileData = new List<TileData>(),
-                sizeOfLevel = mapSize
-            };
+
 
             AddRulers();
             
             /* Camera */
 
-            Vector3 cameraCenter = new Vector3(mapSize.x/ 2, 5, (mapSize.y/ 2) - 1);
+            Vector3 cameraCenter = new Vector3((float)mapSize.x/ 2, 5, (float)mapSize.y/2 - 1);
 
             Camera.main.transform.position = cameraCenter;
 
