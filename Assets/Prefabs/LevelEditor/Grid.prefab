@@ -111,4 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
-  cube: {fileID: 0}
+  gridRenderer: {fileID: 0}
+  circleRenderer: {fileID: 0}
+  circlePrefab: {fileID: 291573469718949389, guid: a1c228752036ba149967611ac5380b71, type: 3}
+  circle: {fileID: 0}

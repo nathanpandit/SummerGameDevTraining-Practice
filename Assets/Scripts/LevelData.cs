@@ -17,6 +17,7 @@ namespace WoodPuzzle
     {
         public Vector2Int position;
         public Color color;
+        public bool isActive;
     }
 
     [Serializable]

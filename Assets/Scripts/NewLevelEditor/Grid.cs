@@ -9,9 +9,9 @@ namespace WoodPuzzle
     public class Grid : MonoBehaviour
     {
         public Vector2Int position;
-        public Renderer gridRenderer;
-        
-        GameObject exit;
+        public Renderer gridRenderer, circleRenderer;
+        public GameObject circlePrefab;
+        public GameObject circle;
 
         private void Awake()
         {
@@ -23,16 +23,24 @@ namespace WoodPuzzle
             position = pos;
             transform.position = new Vector3(pos.x, 0, pos.y);
             name = "Grid " + position.x + " " + position.y;
+            circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
+            circle.transform.SetParent(transform);
+            circleRenderer = circle.GetComponent<Renderer>();
             emptyGrid();
         }
 
         public void setTile()
         {
-            gridRenderer.material.color = LevelEditorA.Instance().colorDict[LevelEditorA.Instance().tileGridColor];
+            if (!circle.activeSelf)
+            {
+                circle.SetActive(true);
+            }
+            circleRenderer.material.color = LevelEditorA.Instance().colorDict[LevelEditorA.Instance().tileGridColor];
         }
 
         public void emptyGrid()
         {
+            circle.SetActive(false);
             gridRenderer.material.color = LevelEditorA.Instance().emptyGridColor;
         }
         

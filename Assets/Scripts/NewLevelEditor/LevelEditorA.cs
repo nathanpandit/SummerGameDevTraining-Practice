@@ -70,7 +70,8 @@ namespace WoodPuzzle
                             grid.setTile();
                             TileData tileData = new TileData();
                             tileData.position = grid.position;
-                            tileData.color = grid.gridRenderer.material.color;
+                            tileData.color = grid.circleRenderer.material.color;
+                            tileData.isActive = true;
                             //if exist find and update data in list
                             if (levelData.tileData.Exists(x => x.position == tileData.position))
                             {
@@ -204,7 +205,12 @@ namespace WoodPuzzle
                 var grid = cells.FirstOrDefault(x => x.position == tile.position);
                 if (grid != null)
                 {
-                    grid.gridRenderer.material.color = tile.color;
+                    if (tile.isActive)
+                    {
+                        grid.circle.SetActive(true);
+                        grid.circleRenderer.material.color = tile.color;
+                    }
+                    
                 }
             }
         }
