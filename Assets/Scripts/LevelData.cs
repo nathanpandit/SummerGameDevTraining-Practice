@@ -47,10 +47,4 @@ namespace WoodPuzzle
     {
         Tile
     }
-    [Serializable]
-    public enum ObjectMaterial
-    {
-        Wood,
-        Metal
-    }
 }

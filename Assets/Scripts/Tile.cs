@@ -9,8 +9,8 @@ namespace WoodPuzzle
         public Color color;
         public List<Mesh> meshes;
         public MeshFilter meshFilter;
-        public GameObject circlePrefab;
-        public GameObject circle;
+        public Circle circlePrefab;
+        public Circle circle;
         public Renderer circleRenderer;
 
         public void Initialize(TileData tileData)
@@ -20,7 +20,7 @@ namespace WoodPuzzle
             transform.position = new Vector3(position.x, 0f, position.y);
             circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
             circle.transform.SetParent(transform);
-            circleRenderer = circle.GetComponent<Renderer>();
+            circleRenderer = circle.circleRenderer;
             circleRenderer.material.color = color;
             // meshFilter.mesh = meshes[(position.x + position.y) % meshes.Count];
         }
@@ -33,9 +33,9 @@ namespace WoodPuzzle
             transform.position = new Vector3(pos.x, 0f, pos.y);
             circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
             circle.transform.SetParent(transform);
-            circleRenderer = circle.GetComponent<Renderer>();
+            circleRenderer = circle.circleRenderer;
             circleRenderer.material.color = color;
-            circle.SetActive(false);
+            circle.gameObject.SetActive(false);
         }
     }
 }

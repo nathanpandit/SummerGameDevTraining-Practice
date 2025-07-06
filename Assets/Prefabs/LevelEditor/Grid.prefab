@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1038238241545013}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.49999857, y: 0.4228, z: -0.010002375}
   m_LocalScale: {x: 0.9, y: 0, z: 0.9}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5961835399255819556
 MeshFilter:
@@ -60,6 +60,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -93,9 +96,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1038238241545013}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 1.0385329, y: 1.9999995, z: 1.0272126}
   m_Center: {x: 0.0016884672, y: 0, z: -0.0017808544}
 --- !u!114 &7040558723191821433
@@ -113,5 +124,5 @@ MonoBehaviour:
   position: {x: 0, y: 0}
   gridRenderer: {fileID: 0}
   circleRenderer: {fileID: 0}
-  circlePrefab: {fileID: 291573469718949389, guid: a1c228752036ba149967611ac5380b71, type: 3}
+  circlePrefab: {fileID: 723567824263531075, guid: a1c228752036ba149967611ac5380b71, type: 3}
   circle: {fileID: 0}

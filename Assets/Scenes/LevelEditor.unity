@@ -222,6 +222,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: -2331820405305684121, guid: 3b615b65cee057649afea842c988617f, type: 3}
   levelHelper: {fileID: 1995593899}
+  level: 4
+  levelParent: {fileID: 0}
 --- !u!4 &101113235
 Transform:
   m_ObjectHideFlags: 0

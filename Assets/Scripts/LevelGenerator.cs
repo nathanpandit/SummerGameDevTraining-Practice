@@ -33,7 +33,6 @@ namespace WoodPuzzle
             if (Input.GetKeyDown(KeyCode.N))
             {
                 level++; 
-                Application.targetFrameRate = 60;
                 ReadLevelData();
                 var data = GenerateLevel();
             }
@@ -41,7 +40,6 @@ namespace WoodPuzzle
             if (Input.GetKeyDown(KeyCode.P))
             {
                 level--;
-                Application.targetFrameRate = 60;
                 ReadLevelData();
                 var data = GenerateLevel();
             }
@@ -88,12 +86,5 @@ namespace WoodPuzzle
             return tiles;
         }
 
-        void destroyLevel(List<Tile> tiles)
-        {
-            foreach (var tile in tiles)
-            {
-                Destroy(tile);
-            }
-        }
     }
 }

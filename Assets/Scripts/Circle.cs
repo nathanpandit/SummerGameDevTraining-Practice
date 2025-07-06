@@ -5,9 +5,11 @@ using UnityEngine;
 public class Circle : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    public Renderer circleRenderer;
+    void Awake()
+
     {
-        
+        circleRenderer = GetComponentInChildren<Renderer>();
     }
 
     // Update is called once per frame

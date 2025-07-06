@@ -22,7 +22,6 @@ namespace WoodPuzzle
         [Range(-1, 300)]
         
         private bool isMetal;
-        public ObjectMaterial material;
 
         public Vector2Int mapSize;
         public int level;
@@ -113,17 +112,6 @@ namespace WoodPuzzle
             {
                 ResetLevel();
             }
-            /* currently not using any materials
-            else if (Input.GetKeyDown(KeyCode.M))
-            {
-                int currentMaterial = (int)material;
-                int materialCount = Enum.GetNames(typeof(ObjectMaterial)).Length;
-                int nextMaterial = (currentMaterial + 1) % materialCount;
-
-                material = (ObjectMaterial)nextMaterial;
-                
-            }
-            */
             else if (int.TryParse(Input.inputString, out key))
             {
                 objectColor = (ObjectColor)(key - 1);
@@ -211,7 +199,7 @@ namespace WoodPuzzle
                 {
                     if (tile.isActive)
                     {
-                        grid.circle.SetActive(true);
+                        grid.circle.gameObject.SetActive(true);
                         grid.circleRenderer.material.color = tile.color;
                     }
                     

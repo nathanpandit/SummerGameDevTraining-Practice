@@ -10,8 +10,8 @@ namespace WoodPuzzle
     {
         public Vector2Int position;
         public Renderer gridRenderer, circleRenderer;
-        public GameObject circlePrefab;
-        public GameObject circle;
+        public Circle circlePrefab;
+        public Circle circle;
 
         private void Awake()
         {
@@ -25,22 +25,22 @@ namespace WoodPuzzle
             name = "Grid " + position.x + " " + position.y;
             circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
             circle.transform.SetParent(transform);
-            circleRenderer = circle.GetComponent<Renderer>();
+            circleRenderer = circle.circleRenderer;
             emptyGrid();
         }
 
         public void setTile()
         {
-            if (!circle.activeSelf)
+            if (!circle.gameObject.activeSelf)
             {
-                circle.SetActive(true);
+                circle.gameObject.SetActive(true);
             }
             circleRenderer.material.color = LevelEditorA.Instance().colorDict[LevelEditorA.Instance().tileGridColor];
         }
 
         public void emptyGrid()
         {
-            circle.SetActive(false);
+            circle.gameObject.SetActive(false);
             gridRenderer.material.color = LevelEditorA.Instance().emptyGridColor;
         }
         
