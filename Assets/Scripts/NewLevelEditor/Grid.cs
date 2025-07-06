@@ -4,7 +4,7 @@ using TMPro;
 using System.Collections;
 using System;
 
-namespace WoodPuzzle
+namespace UfoPuzzle
 {
     public class Grid : MonoBehaviour
     {

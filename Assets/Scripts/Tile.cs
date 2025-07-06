@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WoodPuzzle
+namespace UfoPuzzle
 {
     public class Tile : MonoBehaviour
     {

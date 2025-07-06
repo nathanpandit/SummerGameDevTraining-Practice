@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEditor;
 
-namespace WoodPuzzle
+namespace UfoPuzzle
 {
     public class LevelEditorA : Singleton<LevelEditorA>
     {

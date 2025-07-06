@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace WoodPuzzle
+namespace UfoPuzzle
 {
     public class LevelGenerator : MonoBehaviour
     {
