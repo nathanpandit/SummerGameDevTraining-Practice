@@ -32,7 +32,7 @@ namespace WoodPuzzle
         public TextMeshPro rulerTextPrefab;
 
         public Color emptyGridColor;
-        public ObjectColor tileGridColor;
+        public ObjectColor paintColor;
 
         public Dictionary<ObjectColor, Color> colorDict = new Dictionary<ObjectColor, Color>
         {
@@ -116,7 +116,7 @@ namespace WoodPuzzle
             {
                 objectColor = (ObjectColor)(key - 1);
                 Debug.Log($"Color name is {objectColor.ToString()}");
-                tileGridColor = objectColor;
+                paintColor = objectColor;
 
             }
         }

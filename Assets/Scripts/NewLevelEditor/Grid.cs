@@ -35,7 +35,7 @@ namespace WoodPuzzle
             {
                 circle.gameObject.SetActive(true);
             }
-            circleRenderer.material.color = LevelEditorA.Instance().colorDict[LevelEditorA.Instance().tileGridColor];
+            circleRenderer.material.color = LevelEditorA.Instance().colorDict[LevelEditorA.Instance().paintColor];
         }
 
         public void emptyGrid()
