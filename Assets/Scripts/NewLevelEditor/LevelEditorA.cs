@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEditor;
@@ -35,7 +36,7 @@ namespace UfoPuzzle
         public ObjectColor paintColor;
 
         public EraseMode eraseMode;
-        // public PaintMode paintMode;
+        public PaintMode paintMode;
 
         public enum EraseMode
         {
@@ -43,11 +44,11 @@ namespace UfoPuzzle
             Tile
         }
 
-        /* public enum PaintMode
+        public enum PaintMode
         {
             Paint,
             Tile
-        } */
+        }
 
         public Dictionary<ObjectColor, Color> colorDict = new Dictionary<ObjectColor, Color>
         {
@@ -77,11 +78,7 @@ namespace UfoPuzzle
                 if (Physics.Raycast(ray, out hit))
                 {
                     Grid grid = hit.collider.GetComponent<Grid>();
-                    if (grid == null)
-                    {
-                        Debug.Log("Grid is null");
-                    }
-                    else if (grid != null)
+                    if (grid != null && paintMode == PaintMode.Paint)
                     {
                         if (objectType == ObjectType.Tile)
                         {
@@ -99,6 +96,31 @@ namespace UfoPuzzle
                         }
                     }
                 }
+                else if(paintMode == PaintMode.Tile)
+                {
+                    Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+                    if (groundPlane.Raycast(ray, out float enter))
+                    {
+                        Vector3 worldPosition = ray.GetPoint(enter);
+                        Debug.Log("Mouse clicked at: " + worldPosition);
+                        int finalX = Mathf.RoundToInt(worldPosition.x);
+                        int finalZ = Mathf.RoundToInt(worldPosition.z);
+                        Vector3 newGridPos = new Vector3(finalX, 0, finalZ);
+                        Debug.Log(newGridPos);
+                        if (!levelData.tileData.Exists(x => x.position == new Vector2Int(finalX, finalZ)))
+                        {
+                            Grid newGrid = Instantiate(gridPrefab, newGridPos, quaternion.identity);
+                            newGrid.gameObject.transform.SetParent(tileParent.transform);
+                            newGrid.gameObject.name = $"Grid {finalX} {finalZ}";
+                            TileData tileData = new TileData();
+                            tileData.position = new Vector2Int(finalX, finalZ);
+                            tileData.color = emptyGridColor;
+                            tileData.isActive = false;
+                            levelData.tileData.Add(tileData);
+                        }
+                        
+                    }
+                }
             }
             else if (Input.GetMouseButton(1) && !IsPointerOverUIObject())
             {
@@ -108,9 +130,7 @@ namespace UfoPuzzle
                 {
                     Grid grid = hit.collider.GetComponent<Grid>();
                     if (grid != null)
-                    {
-                        if (objectType == ObjectType.Tile)
-                        {
+                    { 
                             levelData.tileData.RemoveAll(x => x.position == grid.position);
                             if (eraseMode == EraseMode.Paint)
                             {
@@ -118,9 +138,8 @@ namespace UfoPuzzle
                             }
                             else if (eraseMode == EraseMode.Tile)
                             {
-                                grid.gameObject.SetActive(false);
+                                Destroy(grid.gameObject);
                             }
-                        }
                     }
                 }
             }
@@ -248,7 +267,7 @@ namespace UfoPuzzle
             {
                 if (!grid.exists)
                 {
-                    grid.gameObject.SetActive(false);
+                    Destroy(grid.gameObject);
                 }
             }
         }
