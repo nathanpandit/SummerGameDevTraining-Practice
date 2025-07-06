@@ -25,7 +25,6 @@ namespace WoodPuzzle
             // meshFilter.mesh = meshes[(position.x + position.y) % meshes.Count];
         }
 
-        // TEMPORARY SOLUTION: TILE IS WHITE BY DEFAULT
         public void Initialize(Vector2Int pos)
         {
             position = pos;

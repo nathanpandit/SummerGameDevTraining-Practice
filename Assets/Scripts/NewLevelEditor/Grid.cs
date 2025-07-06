@@ -12,6 +12,7 @@ namespace WoodPuzzle
         public Renderer gridRenderer, circleRenderer;
         public Circle circlePrefab;
         public Circle circle;
+        public bool exists = false;
 
         private void Awake()
         {

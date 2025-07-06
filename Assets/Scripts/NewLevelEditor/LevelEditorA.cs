@@ -34,6 +34,21 @@ namespace WoodPuzzle
         public Color emptyGridColor;
         public ObjectColor paintColor;
 
+        public EraseMode eraseMode;
+        // public PaintMode paintMode;
+
+        public enum EraseMode
+        {
+            Paint,
+            Tile
+        }
+
+        /* public enum PaintMode
+        {
+            Paint,
+            Tile
+        } */
+
         public Dictionary<ObjectColor, Color> colorDict = new Dictionary<ObjectColor, Color>
         {
             {ObjectColor.Colorless, new Color32(255, 255, 255, 255) },
@@ -62,7 +77,11 @@ namespace WoodPuzzle
                 if (Physics.Raycast(ray, out hit))
                 {
                     Grid grid = hit.collider.GetComponent<Grid>();
-                    if (grid != null)
+                    if (grid == null)
+                    {
+                        Debug.Log("Grid is null");
+                    }
+                    else if (grid != null)
                     {
                         if (objectType == ObjectType.Tile)
                         {
@@ -93,7 +112,14 @@ namespace WoodPuzzle
                         if (objectType == ObjectType.Tile)
                         {
                             levelData.tileData.RemoveAll(x => x.position == grid.position);
-                            grid.emptyGrid();
+                            if (eraseMode == EraseMode.Paint)
+                            {
+                                grid.emptyGrid();
+                            }
+                            else if (eraseMode == EraseMode.Tile)
+                            {
+                                grid.gameObject.SetActive(false);
+                            }
                         }
                     }
                 }
@@ -111,6 +137,17 @@ namespace WoodPuzzle
             else if (Input.GetKeyDown(KeyCode.R))
             {
                 ResetLevel();
+            }
+            else if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (eraseMode == EraseMode.Paint)
+                {
+                    eraseMode = EraseMode.Tile;
+                }
+                else
+                {
+                    eraseMode = EraseMode.Paint;
+                }
             }
             else if (int.TryParse(Input.inputString, out key))
             {
@@ -197,12 +234,21 @@ namespace WoodPuzzle
                 var grid = cells.FirstOrDefault(x => x.position == tile.position);
                 if (grid != null)
                 {
+                    grid.exists = true;
                     if (tile.isActive)
                     {
                         grid.circle.gameObject.SetActive(true);
                         grid.circleRenderer.material.color = tile.color;
                     }
                     
+                }
+            }
+
+            foreach (var grid in cells)
+            {
+                if (!grid.exists)
+                {
+                    grid.gameObject.SetActive(false);
                 }
             }
         }
