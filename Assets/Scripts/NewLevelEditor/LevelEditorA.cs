@@ -38,6 +38,14 @@ namespace UfoPuzzle
         public EraseMode eraseMode;
         public PaintMode paintMode;
 
+        public Stack<Grid> ufoCol1;
+        public Stack<Grid> ufoCol2;
+        public Stack<Grid> ufoCol3;
+        private int numberOfUfoTrios;
+        public bool addUfoTrio, removeUfoTrio;
+        public GameObject ufoEditor;
+        public UfoTrio trioPrefab;
+
         public enum EraseMode
         {
             Paint,
@@ -65,12 +73,20 @@ namespace UfoPuzzle
 
         private void Start()
         {
+            ufoEditor = new GameObject("Ufo Editor");
+            addUfoTrio = false;
+            removeUfoTrio = false;
+            numberOfUfoTrios = 0;
+            ufoCol1 = new Stack<Grid>();
+            ufoCol2 = new Stack<Grid>();
+            ufoCol3 = new Stack<Grid>();
             GenerateGrid();
         }
         
         
         private void Update()
         {
+            handleStack();
             if (Input.GetMouseButton(0) && !IsPointerOverUIObject() )
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -106,7 +122,7 @@ namespace UfoPuzzle
                         int finalX = Mathf.RoundToInt(worldPosition.x);
                         int finalZ = Mathf.RoundToInt(worldPosition.z);
                         Vector2Int newGridPos = new Vector2Int(finalX, finalZ);
-                        if (!levelData.tileData.Exists(x => x.position == new Vector2Int(finalX, finalZ)))
+                        if (-0.45f <= finalX && finalX <= mapSize.x-0.55f && -0.45f <= finalZ && finalZ <= mapSize.y-0.55f && !levelData.tileData.Exists(x => x.position == new Vector2Int(finalX, finalZ)))
                         {
                             Grid newGrid = Instantiate(gridPrefab, Vector3.zero, quaternion.identity);
                             newGrid.Initialize(newGridPos);
@@ -136,7 +152,7 @@ namespace UfoPuzzle
                             {
                                 grid.emptyGrid();
                             }
-                            else if (eraseMode == EraseMode.Tile)
+                            else if (eraseMode == EraseMode.Tile && !grid.isSlot)
                             {
                                 grid.delete(levelData);
                             }
@@ -166,6 +182,17 @@ namespace UfoPuzzle
                 else
                 {
                     eraseMode = EraseMode.Paint;
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.P))
+            {
+                if (paintMode == PaintMode.Paint)
+                {
+                    paintMode = PaintMode.Tile;
+                }
+                else
+                {
+                    paintMode = PaintMode.Paint;
                 }
             }
             else if (int.TryParse(Input.inputString, out key))
@@ -211,7 +238,7 @@ namespace UfoPuzzle
             Debug.Log($"X size: {(mapSize.x + 1) / 2}");
             Debug.Log($"Y size: {(mapSize.y + 1) / (2)}");
 
-            Camera.main.orthographicSize = Mathf.Max((float)(mapSize.x + 1) / 2, (float)(mapSize.y + 1)/ (2));
+            Camera.main.orthographicSize = Mathf.Max((float)(mapSize.x + 1) / 2, (float)(mapSize.y + 1)/ (2)) * 1.5f;
         }
         
         public void SaveData()
@@ -309,6 +336,59 @@ namespace UfoPuzzle
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             return results.Count > 0;
+        }
+
+        private void handleStack()
+        {
+            if (addUfoTrio)
+            {
+                addUfoTrio = false;
+                numberOfUfoTrios++;
+            }
+
+            if (removeUfoTrio)
+            {
+                removeUfoTrio = false;
+                if(numberOfUfoTrios > 0) numberOfUfoTrios--;
+            }
+            if (numberOfUfoTrios > ufoCol1.Count)
+            {
+                UfoTrio newTrio = Instantiate(trioPrefab, transform.position - new Vector3(0f, 0f, (float)ufoCol1.Count/4), quaternion.identity);
+                newTrio.Initialize();
+                newTrio.transform.SetParent(ufoEditor.transform);
+                newTrio.transform.localScale /= 4;
+                var slots = newTrio.GetComponentsInChildren<Grid>();
+                foreach (Grid slot in slots)
+                {
+                    if (slot.name.Equals("Slot 0"))
+                    {
+                        ufoCol1.Push(slot);
+                    }
+                    else if (slot.name.Equals("Slot 1"))
+                    {
+                        ufoCol2.Push(slot);
+                    }
+                    else if (slot.name.Equals("Slot 2"))
+                    {
+                        ufoCol3.Push(slot);
+                    }
+                    else
+                    {
+                        Debug.Log("Something is horribly wrong here");
+                    }
+                }
+                Debug.Log(ufoCol1);
+            }
+            else if (numberOfUfoTrios < ufoCol1.Count)
+            {
+                Grid grid = ufoCol1.Pop();
+                Destroy(grid.gameObject);
+                grid = ufoCol2.Pop();
+                Destroy(grid.gameObject);
+                grid = ufoCol3.Pop();
+                Destroy(grid.GetComponentInParent<UfoTrio>().gameObject);
+                Destroy(grid.gameObject);
+            }
         }
     }
 }

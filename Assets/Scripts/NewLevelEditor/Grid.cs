@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 namespace UfoPuzzle
 {
@@ -13,6 +14,7 @@ namespace UfoPuzzle
         public Circle circlePrefab;
         public Circle circle;
         public bool exists = false;
+        public bool isSlot = false;
 
         private void Awake()
         {
@@ -24,6 +26,16 @@ namespace UfoPuzzle
             position = pos;
             transform.position = new Vector3(pos.x, 0, pos.y);
             name = "Grid " + position.x + " " + position.y;
+            circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
+            circle.transform.SetParent(transform);
+            circleRenderer = circle.circleRenderer;
+            emptyGrid();
+        }
+        
+        public void InitializeAsSlot(int i)
+        {
+            isSlot = true;
+            name = $"Slot {i}";
             circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
             circle.transform.SetParent(transform);
             circleRenderer = circle.circleRenderer;
