@@ -30,6 +30,7 @@ namespace UfoPuzzle
         Left
     }
 
+    [Serializable]
     public class SlotData
     {
         public int orderOfTrio;

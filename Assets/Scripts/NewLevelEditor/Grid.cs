@@ -15,6 +15,7 @@ namespace UfoPuzzle
         public Circle circle;
         public bool exists = false;
         public bool isSlot = false;
+        public int orderOfTrio = 0;
 
         private void Awake()
         {

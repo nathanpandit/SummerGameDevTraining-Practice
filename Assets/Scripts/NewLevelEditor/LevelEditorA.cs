@@ -11,10 +11,12 @@ namespace UfoPuzzle
 {
     public class LevelEditorA : Singleton<LevelEditorA>
     {
+        public Vector2Int mapSize;
 
         private LevelData levelData = new LevelData()
         {
-            tileData = new List<TileData>()
+            tileData = new List<TileData>(),
+            slotData = new List<SlotData>()
         };
         
         private ObjectType objectType;
@@ -24,7 +26,6 @@ namespace UfoPuzzle
         
         private bool isMetal;
 
-        public Vector2Int mapSize;
         public int level;
 
         public Transform tileParent;
@@ -99,16 +100,50 @@ namespace UfoPuzzle
                         if (objectType == ObjectType.Tile)
                         {
                             grid.setTile();
-                            TileData tileData = new TileData();
-                            tileData.position = grid.position;
-                            tileData.color = grid.circleRenderer.material.color;
-                            tileData.isActive = true;
-                            //if exist find and update data in list
-                            if (levelData.tileData.Exists(x => x.position == tileData.position))
+                            if (!grid.isSlot)
                             {
-                                levelData.tileData.RemoveAll(x => x.position == tileData.position);
+                                TileData tileData = new TileData();
+                                tileData.position = grid.position;
+                                tileData.color = grid.circleRenderer.material.color;
+                                tileData.isActive = true;
+                                //if exist find and update data in list
+                                if (levelData.tileData.Exists(x => x.position == tileData.position))
+                                {
+                                    levelData.tileData.RemoveAll(x => x.position == tileData.position);
+                                }
+
+                                levelData.tileData.Add(tileData);
                             }
-                            levelData.tileData.Add(tileData);
+                            else
+                            {
+                                SlotData slotData = new SlotData();
+                                SlotData pastData = levelData.slotData.Find(x => x.orderOfTrio == grid.orderOfTrio);
+                                levelData.slotData.Remove(pastData);
+                                slotData.orderOfTrio = pastData.orderOfTrio;
+                                if (grid.gameObject.name == "Slot 0")
+                                {
+                                    slotData.color0 = grid.circleRenderer.material.color;
+                                    slotData.color1 = pastData.color1;
+                                    slotData.color2 = pastData.color2;
+                                }
+                                else if (grid.gameObject.name == "Slot 1")
+                                {
+                                    slotData.color1 = grid.circleRenderer.material.color;
+                                    slotData.color0 = pastData.color0;
+                                    slotData.color2 = pastData.color2;
+                                }
+                                else if (grid.gameObject.name == "Slot 2")
+                                {
+                                    slotData.color2 = grid.circleRenderer.material.color;
+                                    slotData.color1 = pastData.color1;
+                                    slotData.color0 = pastData.color0;
+                                }
+                                else
+                                {
+                                    Debug.Log("Something is wrong");
+                                }
+                                levelData.slotData.Add(slotData);
+                            }
                         }
                     }
                 }
@@ -210,6 +245,7 @@ namespace UfoPuzzle
             levelData = new LevelData()
             {
                 tileData = new List<TileData>(),
+                slotData = new List<SlotData>(),
                 sizeOfLevel = mapSize
             };
             for (int i = 0; i < mapSize.x; i++)
@@ -364,14 +400,19 @@ namespace UfoPuzzle
                     if (slot.name.Equals("Slot 0"))
                     {
                         ufoCol0.Push(slot);
+                        slot.orderOfTrio = ufoCol0.Count;
                     }
                     else if (slot.name.Equals("Slot 1"))
                     {
                         ufoCol1.Push(slot);
+                        slot.orderOfTrio = ufoCol1.Count;
+
                     }
                     else if (slot.name.Equals("Slot 2"))
                     {
                         ufoCol2.Push(slot);
+                        slot.orderOfTrio = ufoCol2.Count;
+
                     }
                     else
                     {
