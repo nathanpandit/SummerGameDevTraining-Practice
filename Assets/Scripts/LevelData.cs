@@ -8,6 +8,7 @@ namespace UfoPuzzle
     public class LevelData
     {
         public List<TileData> tileData = new List<TileData>();
+        public List<SlotData> slotData = new List<SlotData>();
         public Vector2Int sizeOfLevel;
     }
     
@@ -27,6 +28,12 @@ namespace UfoPuzzle
         Right,
         Down,
         Left
+    }
+
+    public class SlotData
+    {
+        public int orderOfTrio;
+        public Color color0, color1, color2;
     }
 
     [Serializable]

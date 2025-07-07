@@ -394,6 +394,10 @@ MonoBehaviour:
   paintColor: 0
   eraseMode: 0
   paintMode: 0
+  addUfoTrio: 0
+  removeUfoTrio: 0
+  ufoEditor: {fileID: 0}
+  trioPrefab: {fileID: 102718133991136118, guid: 47903bb62ccd6a84fa6ae3d3384f4af5, type: 3}
 --- !u!4 &1201609720
 Transform:
   m_ObjectHideFlags: 0
@@ -403,7 +407,7 @@ Transform:
   m_GameObject: {fileID: 1201609718}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.49999857, y: 0.000012330711, z: -0.010002375}
+  m_LocalPosition: {x: 4.33, y: 0.000012330711, z: 3.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
