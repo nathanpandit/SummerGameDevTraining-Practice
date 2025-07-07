@@ -44,6 +44,15 @@ namespace UfoPuzzle
             circle.gameObject.SetActive(false);
             gridRenderer.material.color = LevelEditorA.Instance().emptyGridColor;
         }
+
+        public void delete(LevelData levelData)
+        {
+            if (levelData.tileData.Exists(x => x.position == position))
+            {
+                levelData.tileData.RemoveAll(x => x.position == position);
+            }
+            Destroy(gameObject);
+        }
         
         
         

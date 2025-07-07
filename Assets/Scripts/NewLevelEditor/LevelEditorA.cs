@@ -105,13 +105,12 @@ namespace UfoPuzzle
                         Debug.Log("Mouse clicked at: " + worldPosition);
                         int finalX = Mathf.RoundToInt(worldPosition.x);
                         int finalZ = Mathf.RoundToInt(worldPosition.z);
-                        Vector3 newGridPos = new Vector3(finalX, 0, finalZ);
-                        Debug.Log(newGridPos);
+                        Vector2Int newGridPos = new Vector2Int(finalX, finalZ);
                         if (!levelData.tileData.Exists(x => x.position == new Vector2Int(finalX, finalZ)))
                         {
-                            Grid newGrid = Instantiate(gridPrefab, newGridPos, quaternion.identity);
+                            Grid newGrid = Instantiate(gridPrefab, Vector3.zero, quaternion.identity);
+                            newGrid.Initialize(newGridPos);
                             newGrid.gameObject.transform.SetParent(tileParent.transform);
-                            newGrid.gameObject.name = $"Grid {finalX} {finalZ}";
                             TileData tileData = new TileData();
                             tileData.position = new Vector2Int(finalX, finalZ);
                             tileData.color = emptyGridColor;
@@ -130,15 +129,16 @@ namespace UfoPuzzle
                 {
                     Grid grid = hit.collider.GetComponent<Grid>();
                     if (grid != null)
-                    { 
-                            levelData.tileData.RemoveAll(x => x.position == grid.position);
+                    {
+
+                        levelData.tileData.RemoveAll(x => x.position == grid.position);
                             if (eraseMode == EraseMode.Paint)
                             {
                                 grid.emptyGrid();
                             }
                             else if (eraseMode == EraseMode.Tile)
                             {
-                                Destroy(grid.gameObject);
+                                grid.delete(levelData);
                             }
                     }
                 }
@@ -171,7 +171,6 @@ namespace UfoPuzzle
             else if (int.TryParse(Input.inputString, out key))
             {
                 objectColor = (ObjectColor)(key - 1);
-                Debug.Log($"Color name is {objectColor.ToString()}");
                 paintColor = objectColor;
 
             }
@@ -267,7 +266,7 @@ namespace UfoPuzzle
             {
                 if (!grid.exists)
                 {
-                    Destroy(grid.gameObject);
+                    grid.delete(levelData);
                 }
             }
         }
