@@ -384,7 +384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f8d65e8f0db428587d55110cb51c8f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: {x: 3, y: 3}
+  mapSize: {x: 11, y: 11}
   level: 1
   tileParent: {fileID: 407823053}
   rulersParent: {fileID: 221675700259299108, guid: d9a407019db245f45b1caed2e1eb1764, type: 3}

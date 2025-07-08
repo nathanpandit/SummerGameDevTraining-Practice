@@ -47,7 +47,7 @@ namespace UfoPuzzle
         public GameObject ufoEditor;
         public UfoTrio trioPrefab;
         private float editorScale;
-
+        private float scroll;
         public enum EraseMode
         {
             Paint,
@@ -104,6 +104,13 @@ namespace UfoPuzzle
                 handleStack();
             }
             
+            scroll = Input.GetAxis("Mouse ScrollWheel");
+
+            if (scroll != 0f)
+            {
+                Camera.main.transform.position += new Vector3(0f, 0f, scroll);
+            }
+
             if (Input.GetMouseButton(0) && !IsPointerOverUIObject() )
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -319,13 +326,14 @@ namespace UfoPuzzle
                 ResetSlots();
                 GenerateGrid();
                 Debug.Log("New level generated!");
-                gameObject.transform.position = new Vector3(mapSize.x + 2.45f, 0f, mapSize.y + 0.45f);
+                gameObject.transform.position = new Vector3(mapSize.x + 1.45f, 0f, mapSize.y - 0.55f);
             }
             else
             {
                 levelData = JsonUtility.FromJson<LevelData>(jsonFile.text);
-                mapSize = levelData.sizeOfLevel;
-                gameObject.transform.position = new Vector3(mapSize.x + 2.45f, 0f, mapSize.y + 0.45f);
+                mapSize = levelData.sizeOfLevel; 
+                gameObject.transform.position = new Vector3(mapSize.x + 1.45f, 0f, mapSize.y - 0.55f);
+
                 LevelData tempData = levelData;
                 ResetSlots();
                 GenerateGrid();
@@ -361,12 +369,12 @@ namespace UfoPuzzle
             for (int i = 1; i <= max; i++)
             {
                 numberOfUfoTrios++;
+                editorScale = (float)Mathf.Max(mapSize.x, mapSize.y) / (Mathf.Max(mapSize.x, mapSize.y) + 2);
                 SlotData current = levelData.slotData.Find(x => x.orderOfTrio == i);
                 UfoTrio newTrio = Instantiate(trioPrefab,
                     transform.position - new Vector3(0f, 0f, (max - i) * editorScale), quaternion.identity);
                 newTrio.transform.SetParent(ufoEditor.transform);
                 newTrio.Initialize();
-                editorScale = (float)Mathf.Max(mapSize.x, mapSize.y) / (Mathf.Max(mapSize.x, mapSize.y) + 2);
                 newTrio.transform.localScale *= editorScale;
                 var slots = newTrio.GetComponentsInChildren<Grid>();
                 foreach (Grid slot in slots)
@@ -453,6 +461,7 @@ namespace UfoPuzzle
         {
             if (numberOfUfoTrios > ufoCol0.Count)
             {
+                
                 moveTriosDown();
                 UfoTrio newTrio = Instantiate(trioPrefab, transform.position, quaternion.identity);
                 newTrio.Initialize();
