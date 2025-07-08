@@ -40,7 +40,7 @@ namespace UfoPuzzle
             circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
             circle.transform.SetParent(transform);
             circleRenderer = circle.circleRenderer;
-            emptyGrid();
+            circleRenderer.material.color = Color.red;
         }
 
         public void setTile()
