@@ -296,6 +296,7 @@ namespace UfoPuzzle
             if (!jsonFile)
             {
                 Debug.Log("Creating new level...");
+                ResetSlots();
                 GenerateGrid();
                 Debug.Log("New level generated!");
             }
@@ -304,6 +305,7 @@ namespace UfoPuzzle
                 levelData = JsonUtility.FromJson<LevelData>(jsonFile.text);
                 mapSize = levelData.sizeOfLevel;
                 LevelData tempData = levelData;
+                ResetSlots();
                 GenerateGrid();
                 levelData = tempData;
                 Debug.Log($"Level {level} loaded:\n{jsonFile.text}");
@@ -358,7 +360,19 @@ namespace UfoPuzzle
 
         public void ResetLevel()
         {
+            ResetSlots();
             GenerateGrid();
+        }
+
+        public void ResetSlots()
+        {
+            ufoCol0.Clear();
+            ufoCol1.Clear();
+            ufoCol2.Clear();
+            numberOfUfoTrios = 0;
+            Debug.Log($"Destroying object: {ufoEditor.gameObject.name}");
+            Destroy(ufoEditor.gameObject);
+            ufoEditor = new GameObject("Ufo Editor");
         }
         
         private bool IsPointerOverUIObject() {
