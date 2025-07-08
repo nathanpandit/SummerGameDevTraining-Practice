@@ -87,7 +87,20 @@ namespace UfoPuzzle
         
         private void Update()
         {
-            handleStack();
+            if (addUfoTrio)
+            {
+                addUfoTrio = false;
+                numberOfUfoTrios++;
+                handleStack();
+            }
+
+            if (removeUfoTrio)
+            {
+                removeUfoTrio = false;
+                if(numberOfUfoTrios > 0) numberOfUfoTrios--;
+                handleStack();
+            }
+            
             if (Input.GetMouseButton(0) && !IsPointerOverUIObject() )
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -330,13 +343,51 @@ namespace UfoPuzzle
                     
                 }
             }
-
+            
             foreach (var grid in cells)
             {
                 if (!grid.exists)
                 {
                     grid.delete(levelData);
                 }
+            }
+
+            int max = levelData.slotData.Count;
+            for (int i = 1; i <= max; i++)
+            {
+                numberOfUfoTrios++;
+                SlotData current = levelData.slotData.Find(x => x.orderOfTrio == i);
+                UfoTrio newTrio = Instantiate(trioPrefab,
+                    transform.position - new Vector3(0f, 0f, (max - i) * 0.25f), quaternion.identity);
+                newTrio.transform.SetParent(ufoEditor.transform);
+                newTrio.Initialize();
+                newTrio.transform.localScale /= 4;
+                var slots = newTrio.GetComponentsInChildren<Grid>();
+                foreach (Grid slot in slots)
+                {
+                    if (slot.name.Equals("Slot 0"))
+                    {
+                        ufoCol0.Push(slot);
+                        slot.orderOfTrio = current.orderOfTrio;
+                        slot.circleRenderer.material.color = current.color0;
+                    }
+                    else if (slot.name.Equals("Slot 1"))
+                    {
+                        ufoCol1.Push(slot);
+                        slot.orderOfTrio = current.orderOfTrio;
+                        slot.circleRenderer.material.color = current.color1;
+
+
+                    }
+                    else if (slot.name.Equals("Slot 2"))
+                    {
+                        ufoCol2.Push(slot);
+                        slot.orderOfTrio = current.orderOfTrio;
+                        slot.circleRenderer.material.color = current.color2;
+
+                    }
+                }
+
             }
         }
 
@@ -394,20 +445,10 @@ namespace UfoPuzzle
 
         private void handleStack()
         {
-            if (addUfoTrio)
-            {
-                addUfoTrio = false;
-                numberOfUfoTrios++;
-            }
-
-            if (removeUfoTrio)
-            {
-                removeUfoTrio = false;
-                if(numberOfUfoTrios > 0) numberOfUfoTrios--;
-            }
             if (numberOfUfoTrios > ufoCol0.Count)
             {
-                UfoTrio newTrio = Instantiate(trioPrefab, transform.position - new Vector3(0f, 0f, (float)ufoCol1.Count/4), quaternion.identity);
+                moveTriosDown();
+                UfoTrio newTrio = Instantiate(trioPrefab, transform.position, quaternion.identity);
                 newTrio.Initialize();
                 newTrio.transform.SetParent(ufoEditor.transform);
                 newTrio.transform.localScale /= 4;
@@ -446,6 +487,7 @@ namespace UfoPuzzle
             }
             else if (numberOfUfoTrios < ufoCol0.Count)
             {
+                moveTriosUp();
                 levelData.slotData.RemoveAll(x => x.orderOfTrio == ufoCol0.Count);
                 Grid grid = ufoCol0.Pop();
                 Destroy(grid.gameObject);
@@ -454,6 +496,36 @@ namespace UfoPuzzle
                 grid = ufoCol2.Pop();
                 Destroy(grid.GetComponentInParent<UfoTrio>().gameObject);
                 Destroy(grid.gameObject);
+            }
+        }
+
+        private void moveTriosDown()
+        {
+            List<GameObject> children = new List<GameObject>();
+
+            foreach (Transform child in ufoEditor.transform)
+            {
+                children.Add(child.gameObject);
+            }
+
+            foreach (GameObject trio in children)
+            {
+                trio.transform.position = trio.transform.position - new Vector3(0f, 0f, 0.25f);
+            }
+        }
+
+        private void moveTriosUp()
+        {
+            List<GameObject> children = new List<GameObject>();
+
+            foreach (Transform child in ufoEditor.transform)
+            {
+                children.Add(child.gameObject);
+            }
+
+            foreach (GameObject trio in children)
+            {
+                trio.transform.position = trio.transform.position + new Vector3(0f, 0f, 0.25f);
             }
         }
     }
