@@ -16,7 +16,8 @@ namespace UfoPuzzle
         private LevelData levelData = new LevelData()
         {
             tileData = new List<TileData>(),
-            slotData = new List<SlotData>()
+            circleData = new List<CircleData>(),
+            ufoData = new List<UfoData>()
         };
         
         private ObjectType objectType;
@@ -36,9 +37,6 @@ namespace UfoPuzzle
         public Color emptyGridColor;
         public ObjectColor paintColor;
 
-        public EraseMode eraseMode;
-        public PaintMode paintMode;
-
         public Stack<Grid> ufoCol0;
         public Stack<Grid> ufoCol1;
         public Stack<Grid> ufoCol2;
@@ -48,17 +46,6 @@ namespace UfoPuzzle
         public UfoTrio trioPrefab;
         private float editorScale;
         private float scroll;
-        public enum EraseMode
-        {
-            Paint,
-            Tile
-        }
-
-        public enum PaintMode
-        {
-            Paint,
-            Tile
-        }
 
         public Dictionary<ObjectColor, Color> colorDict = new Dictionary<ObjectColor, Color>
         {
@@ -118,59 +105,44 @@ namespace UfoPuzzle
                 if (Physics.Raycast(ray, out hit))
                 {
                     Grid grid = hit.collider.GetComponent<Grid>();
-                    if (grid != null && paintMode == PaintMode.Paint)
+                    if (grid != null && grid.objectType == ObjectType.Circle)
                     {
-                        if (objectType == ObjectType.Tile)
+                        if (objectType != ObjectType.Tile)
                         {
                             grid.setTile();
                             if (!grid.isSlot)
                             {
                                 TileData tileData = new TileData();
+                                CircleData circleData = new CircleData();
                                 tileData.position = grid.position;
-                                tileData.color = grid.circleRenderer.material.color;
-                                tileData.isActive = true;
+                                circleData.position = grid.position;
+                                circleData.color = grid.circleRenderer.material.color;
+                                // tileData.isActive = true;
                                 //if exist find and update data in list
                                 if (levelData.tileData.Exists(x => x.position == tileData.position))
                                 {
                                     levelData.tileData.RemoveAll(x => x.position == tileData.position);
                                 }
 
+                                if (levelData.circleData.Exists(x => x.position == circleData.position))
+                                {
+                                    levelData.circleData.RemoveAll(x => x.position == circleData.position);
+                                }
                                 levelData.tileData.Add(tileData);
+                                levelData.circleData.Add(circleData);
                             }
                             else
                             {
-                                SlotData slotData = new SlotData();
-                                SlotData pastData = levelData.slotData.Find(x => x.orderOfTrio == grid.orderOfTrio);
+                                UfoData ufoData = new UfoData();
+                                UfoData pastData = levelData.ufoData.Find(x => x.orderOfTrio == grid.orderOfTrio);
                                 levelData.slotData.Remove(pastData);
                                 slotData.orderOfTrio = pastData.orderOfTrio;
-                                if (grid.gameObject.name == "Slot 0")
-                                {
-                                    slotData.color0 = grid.circleRenderer.material.color;
-                                    slotData.color1 = pastData.color1;
-                                    slotData.color2 = pastData.color2;
-                                }
-                                else if (grid.gameObject.name == "Slot 1")
-                                {
-                                    slotData.color1 = grid.circleRenderer.material.color;
-                                    slotData.color0 = pastData.color0;
-                                    slotData.color2 = pastData.color2;
-                                }
-                                else if (grid.gameObject.name == "Slot 2")
-                                {
-                                    slotData.color2 = grid.circleRenderer.material.color;
-                                    slotData.color1 = pastData.color1;
-                                    slotData.color0 = pastData.color0;
-                                }
-                                else
-                                {
-                                    Debug.Log("Something is wrong");
-                                }
                                 levelData.slotData.Add(slotData);
                             }
                         }
                     }
                 }
-                else if(paintMode == PaintMode.Tile)
+                else
                 {
                     Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
                     if (groundPlane.Raycast(ray, out float enter))
@@ -186,10 +158,13 @@ namespace UfoPuzzle
                             newGrid.Initialize(newGridPos);
                             newGrid.gameObject.transform.SetParent(tileParent.transform);
                             TileData tileData = new TileData();
+                            CircleData circleData = new CircleData();
                             tileData.position = new Vector2Int(finalX, finalZ);
-                            tileData.color = emptyGridColor;
-                            tileData.isActive = false;
+                            circleData.position = new Vector2Int(finalX, finalZ);
+                            circleData.color = emptyGridColor;
+                            // tileData.isActive = false;
                             levelData.tileData.Add(tileData);
+                            levelData.circleData.Add(circleData);
                         }
                         
                     }
@@ -205,16 +180,19 @@ namespace UfoPuzzle
                     if (grid != null)
                     {
                         levelData.tileData.RemoveAll(x => x.position == grid.position);
-                        if (eraseMode == EraseMode.Paint && !grid.isSlot) 
+                        if (grid.objectType == ObjectType.Circle) 
                         {
                                 grid.emptyGrid();
                                 TileData tileData = new TileData();
-                                tileData.color = grid.circleRenderer.material.color;
+                                CircleData circleData = new CircleData();
+                                circleData.color = grid.circleRenderer.material.color;
+                                circleData.position = grid.position;
                                 tileData.position = grid.position;
-                                tileData.isActive = false;
+                                // tileData.isActive = false;
                                 levelData.tileData.Add(tileData);
+                                levelData.circleData.Add(circleData);
                         }
-                        else if (eraseMode == EraseMode.Tile && !grid.isSlot)
+                        else if (!grid.isSlot && grid.objectType == ObjectType.Tile)
                         {
                                 grid.delete(levelData);
                         }
@@ -235,28 +213,6 @@ namespace UfoPuzzle
             {
                 ResetLevel();
             }
-            else if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (eraseMode == EraseMode.Paint)
-                {
-                    eraseMode = EraseMode.Tile;
-                }
-                else
-                {
-                    eraseMode = EraseMode.Paint;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.P))
-            {
-                if (paintMode == PaintMode.Paint)
-                {
-                    paintMode = PaintMode.Tile;
-                }
-                else
-                {
-                    paintMode = PaintMode.Paint;
-                }
-            }
             else if (int.TryParse(Input.inputString, out key))
             {
                 objectColor = (ObjectColor)(key - 1);
@@ -272,7 +228,8 @@ namespace UfoPuzzle
             levelData = new LevelData()
             {
                 tileData = new List<TileData>(),
-                slotData = new List<SlotData>(),
+                ufoData = new List<UfoData>(),
+                circleData = new List<CircleData>(),
                 sizeOfLevel = mapSize
             };
             for (int i = 0; i < mapSize.x; i++)
@@ -348,13 +305,15 @@ namespace UfoPuzzle
                 if (grid != null)
                 {
                     grid.exists = true;
+                    /*
                     if (tile.isActive)
                     {
                         grid.circle.gameObject.SetActive(true);
                         grid.circleRenderer.material.color = tile.color;
-                    }
+                    } */
                     
                 }
+                
             }
             
             foreach (var grid in cells)

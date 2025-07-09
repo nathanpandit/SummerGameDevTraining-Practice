@@ -16,10 +16,12 @@ namespace UfoPuzzle
         public bool exists = false;
         public bool isSlot = false;
         public int orderOfTrio = 0;
+        public ObjectType objectType;
 
         private void Awake()
         {
             gridRenderer = GetComponent<Renderer>();
+            objectType = ObjectType.Tile; // be careful here
         }
 
         public void Initialize(Vector2Int pos)
@@ -40,7 +42,6 @@ namespace UfoPuzzle
             circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
             circle.transform.SetParent(transform);
             circleRenderer = circle.circleRenderer;
-            circleRenderer.material.color = Color.red;
         }
 
         public void setTile()

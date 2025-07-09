@@ -77,10 +77,10 @@ namespace UfoPuzzle
                 tile.Initialize(tileData);
                 tiles.Add(tile);
             }
-
+            
             List<SlotData> slotData = levelData.slotData;
             int num = slotData.Count;
-
+            
             SlotData firstSlots = slotData.Find(x => x.orderOfTrio == num);
             if (firstSlots == null) Debug.Log("Something is wrong!");
             for (int i = 0; i <= 2; i++)

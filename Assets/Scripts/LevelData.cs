@@ -8,7 +8,8 @@ namespace UfoPuzzle
     public class LevelData
     {
         public List<TileData> tileData = new List<TileData>();
-        public List<SlotData> slotData = new List<SlotData>();
+        public List<CircleData> circleData = new List<CircleData>();
+        public List<UfoData> ufoData = new List<UfoData>();
         public Vector2Int sizeOfLevel;
     }
     
@@ -17,8 +18,6 @@ namespace UfoPuzzle
     public class TileData
     {
         public Vector2Int position;
-        public Color color;
-        public bool isActive;
     }
 
     [Serializable]
@@ -31,10 +30,16 @@ namespace UfoPuzzle
     }
 
     [Serializable]
-    public class SlotData
+    public class CircleData
     {
-        public int orderOfTrio;
-        public Color color0, color1, color2;
+        public Vector2Int position;
+        public Color color;
+    }
+
+    [Serializable]
+    public class UfoData
+    {
+        public Color color;
     }
 
     [Serializable]
@@ -53,6 +58,8 @@ namespace UfoPuzzle
     [Serializable]
     public enum ObjectType
     {
-        Tile
+        Tile,
+        Circle,
+        Ufo
     }
 }
