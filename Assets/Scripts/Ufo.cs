@@ -5,14 +5,10 @@ using UnityEngine;
 public class Ufo : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Renderer ufoRenderer;
+    void Awake()
 
-    // Update is called once per frame
-    void Update()
     {
-        
+        ufoRenderer = GetComponentInChildren<Renderer>();
     }
 }

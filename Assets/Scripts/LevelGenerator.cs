@@ -9,10 +9,12 @@ namespace UfoPuzzle
     {
         private LevelData levelData;
         public Tile tilePrefab;
+        public Slot slotPrefab;
         public LevelHelper levelHelper;
         private GameObject tutorialObject => Resources.Load<GameObject>("TutorialObject");
         public int level;
         public GameObject levelParent;
+        public Ufo ufoPrefab;
 
         private void Start()
         {
@@ -64,14 +66,7 @@ namespace UfoPuzzle
             /* adjust camera */
             Vector3 cameraCenter = new Vector3((float)levelData.sizeOfLevel.x/2 - 0.5f, 5, (float)levelData.sizeOfLevel.y/2 - 0.5f);
             Camera.main.transform.position = cameraCenter;
-            if (levelData.sizeOfLevel.x > levelData.sizeOfLevel.y)
-            {
-                Camera.main.orthographicSize = (float)levelData.sizeOfLevel.x / 2 + 0.5f;
-            }
-            else
-            {
-                Camera.main.orthographicSize = (float)levelData.sizeOfLevel.y / 2 + 0.5f;
-            }
+            Camera.main.orthographicSize = Mathf.Max((float)(levelData.sizeOfLevel.x + 1) / 2, (float)(levelData.sizeOfLevel.y + 1)/ (2)) * 1.5f;
 
             var tileParent = new GameObject("Tiles");
             tileParent.transform.SetParent(levelParent.transform);
@@ -81,6 +76,17 @@ namespace UfoPuzzle
                 var tile = Instantiate(tilePrefab, new Vector3(tileData.position.x, 0, tileData.position.y), Quaternion.identity, tileParent.transform);
                 tile.Initialize(tileData);
                 tiles.Add(tile);
+            }
+
+            List<SlotData> slotData = levelData.slotData;
+            int num = slotData.Count;
+
+            SlotData firstSlots = slotData.Find(x => x.orderOfTrio == num);
+            if (firstSlots == null) Debug.Log("Something is wrong!");
+            for (int i = 0; i <= 2; i++)
+            {
+                Slot newSlot = Instantiate(slotPrefab, transform.position, Quaternion.identity);
+                newSlot.Initialize(firstSlots, i);
             }
             
             return tiles;
