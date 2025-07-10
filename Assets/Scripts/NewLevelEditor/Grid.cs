@@ -16,12 +16,10 @@ namespace UfoPuzzle
         public bool exists = false;
         public bool isSlot = false;
         public int orderOfTrio = 0;
-        public ObjectType objectType;
 
         private void Awake()
         {
             gridRenderer = GetComponent<Renderer>();
-            objectType = ObjectType.Tile; // be careful here
         }
 
         public void Initialize(Vector2Int pos)

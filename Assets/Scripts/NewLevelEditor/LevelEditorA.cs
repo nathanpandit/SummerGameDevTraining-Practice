@@ -20,7 +20,7 @@ namespace UfoPuzzle
             ufoData = new List<UfoData>()
         };
         
-        private ObjectType objectType;
+        public ObjectType objectType;
         private ObjectColor objectColor;
 
         [Range(-1, 300)]
@@ -37,13 +37,11 @@ namespace UfoPuzzle
         public Color emptyGridColor;
         public ObjectColor paintColor;
 
-        public Stack<Grid> ufoCol0;
-        public Stack<Grid> ufoCol1;
-        public Stack<Grid> ufoCol2;
-        private int numberOfUfoTrios;
-        public bool addUfoTrio, removeUfoTrio;
+
         public GameObject ufoEditor;
         public UfoTrio trioPrefab;
+        public List<UfoData> ufoList;
+        public int numberOfUfoTrios;
         private float editorScale;
         private float scroll;
 
@@ -63,34 +61,14 @@ namespace UfoPuzzle
         private void Start()
         {
             ufoEditor = new GameObject("Ufo Editor");
-            addUfoTrio = false;
-            removeUfoTrio = false;
-            numberOfUfoTrios = 0;
-            ufoCol0 = new Stack<Grid>();
-            ufoCol1 = new Stack<Grid>();
-            ufoCol2 = new Stack<Grid>();
-            GenerateGrid();
             gameObject.transform.position = new Vector3(mapSize.x + 1.45f, 0f, mapSize.y - 0.55f);
+            GenerateGrid();
             editorScale = (float)Mathf.Max(mapSize.x, mapSize.y) / (Mathf.Max(mapSize.x, mapSize.y) + 2);
         }
         
         
         private void Update()
         {
-            if (addUfoTrio)
-            {
-                addUfoTrio = false;
-                numberOfUfoTrios++;
-                handleStack();
-            }
-
-            if (removeUfoTrio)
-            {
-                removeUfoTrio = false;
-                if(numberOfUfoTrios > 0) numberOfUfoTrios--;
-                handleStack();
-            }
-            
             scroll = Input.GetAxis("Mouse ScrollWheel");
 
             if (scroll != 0f)
@@ -105,13 +83,13 @@ namespace UfoPuzzle
                 if (Physics.Raycast(ray, out hit))
                 {
                     Grid grid = hit.collider.GetComponent<Grid>();
-                    if (grid != null && grid.objectType == ObjectType.Circle)
+                    if (grid != null)
                     {
-                        if (objectType != ObjectType.Tile)
+                        if (objectType == ObjectType.Circle || objectType == ObjectType.Ufo)
                         {
-                            grid.setTile();
-                            if (!grid.isSlot)
+                            if (!grid.isSlot && objectType == ObjectType.Circle)
                             {
+                                grid.setTile();
                                 TileData tileData = new TileData();
                                 CircleData circleData = new CircleData();
                                 tileData.position = grid.position;
@@ -131,18 +109,23 @@ namespace UfoPuzzle
                                 levelData.tileData.Add(tileData);
                                 levelData.circleData.Add(circleData);
                             }
-                            else
+                            else if(grid.isSlot && objectType == ObjectType.Ufo)
                             {
-                                UfoData ufoData = new UfoData();
-                                UfoData pastData = levelData.ufoData.Find(x => x.orderOfTrio == grid.orderOfTrio);
-                                levelData.slotData.Remove(pastData);
-                                slotData.orderOfTrio = pastData.orderOfTrio;
-                                levelData.slotData.Add(slotData);
+                                grid.setTile();
+                                Vector3 difference = new Vector3();
+                                difference = (transform.position - grid.transform.position) / editorScale;
+                                Debug.Log(difference);
+                                // this difference is of the form (i % 3, 0, i / 3) where i is the slot index
+                                int index = -(int)difference.z * 3 + (int)difference.x;
+                                index *= -1;
+                                Debug.Log(index);
+                                levelData.ufoData[index].color = colorDict[paintColor];
+
                             }
                         }
                     }
                 }
-                else
+                else if(objectType == ObjectType.Tile)
                 {
                     Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
                     if (groundPlane.Raycast(ray, out float enter))
@@ -180,7 +163,7 @@ namespace UfoPuzzle
                     if (grid != null)
                     {
                         levelData.tileData.RemoveAll(x => x.position == grid.position);
-                        if (grid.objectType == ObjectType.Circle) 
+                        if (objectType == ObjectType.Circle && !grid.isSlot) 
                         {
                                 grid.emptyGrid();
                                 TileData tileData = new TileData();
@@ -192,9 +175,21 @@ namespace UfoPuzzle
                                 levelData.tileData.Add(tileData);
                                 levelData.circleData.Add(circleData);
                         }
-                        else if (!grid.isSlot && grid.objectType == ObjectType.Tile)
+                        else if (objectType == ObjectType.Ufo && grid.isSlot)
                         {
-                                grid.delete(levelData);
+                            grid.emptyGrid();
+                            Vector3 difference = new Vector3();
+                            difference = (transform.position - grid.transform.position) / editorScale;
+                            Debug.Log(difference);
+                            // this difference is of the form (i % 3, 0, i / 3) where i is the slot index
+                            int index = -(int)difference.z * 3 + (int)difference.x;
+                            index *= -1;
+                            Debug.Log(index);
+                            levelData.ufoData[index].color = Color.white; // REMARK HERE!!! WHITE IS NOT A VALID CIRCLE COLOR
+                        }
+                        else if(!grid.isSlot && objectType == ObjectType.Tile)
+                        {
+                            grid.delete(levelData);
                         }
                     }
                 }
@@ -243,9 +238,7 @@ namespace UfoPuzzle
                     levelData.tileData.Add(newTileData);
                 }
             }
-
-
-
+            
             AddRulers();
             
             /* Camera */
@@ -259,6 +252,27 @@ namespace UfoPuzzle
             Debug.Log($"Y size: {(mapSize.y + 1) / (2)}");
 
             Camera.main.orthographicSize = Mathf.Max((float)(mapSize.x + 1) / 2, (float)(mapSize.y + 1)/ (2)) * 1.5f;
+            
+            ufoList = new List<UfoData>();
+            for (int i = 0; i < 3 * numberOfUfoTrios; i++)
+            {
+                UfoData newData = new UfoData();
+                levelData.ufoData.Add(newData);
+            }
+
+            GenerateEditor();
+        }
+
+        private void GenerateEditor()
+        {
+            editorScale = (float)Mathf.Max(mapSize.x, mapSize.y) / (Mathf.Max(mapSize.x, mapSize.y) + 2);
+            for (int i = 0; i < 3 * numberOfUfoTrios; i++)
+            {
+                Grid newSlot = Instantiate(gridPrefab, new Vector3(transform.position.x + (i % 3)*editorScale, 0f, transform.position.z - (i / 3)*editorScale), Quaternion.identity);
+                newSlot.InitializeAsSlot(i);
+                newSlot.transform.localScale *= editorScale;
+                newSlot.transform.SetParent(ufoEditor.transform);
+            }
         }
         
         public void SaveData()
@@ -299,9 +313,9 @@ namespace UfoPuzzle
             }
 
             var cells = tileParent.GetComponentsInChildren<Grid>();
-            foreach (var tile in levelData.tileData)
+            foreach (var circleData in levelData.circleData)
             {
-                var grid = cells.FirstOrDefault(x => x.position == tile.position);
+                var grid = cells.FirstOrDefault(x => x.position == circleData.position);
                 if (grid != null)
                 {
                     grid.exists = true;
@@ -324,43 +338,15 @@ namespace UfoPuzzle
                 }
             }
 
-            int max = levelData.slotData.Count;
-            for (int i = 1; i <= max; i++)
+            int max = levelData.ufoData.Count;
+            for (int i = 0; i < max; i++)
             {
-                numberOfUfoTrios++;
                 editorScale = (float)Mathf.Max(mapSize.x, mapSize.y) / (Mathf.Max(mapSize.x, mapSize.y) + 2);
-                SlotData current = levelData.slotData.Find(x => x.orderOfTrio == i);
-                UfoTrio newTrio = Instantiate(trioPrefab,
-                    transform.position - new Vector3(0f, 0f, (max - i) * editorScale), quaternion.identity);
-                newTrio.transform.SetParent(ufoEditor.transform);
-                newTrio.Initialize();
-                newTrio.transform.localScale *= editorScale;
-                var slots = newTrio.GetComponentsInChildren<Grid>();
-                foreach (Grid slot in slots)
-                {
-                    if (slot.name.Equals("Slot 0"))
-                    {
-                        ufoCol0.Push(slot);
-                        slot.orderOfTrio = current.orderOfTrio;
-                        slot.circleRenderer.material.color = current.color0;
-                    }
-                    else if (slot.name.Equals("Slot 1"))
-                    {
-                        ufoCol1.Push(slot);
-                        slot.orderOfTrio = current.orderOfTrio;
-                        slot.circleRenderer.material.color = current.color1;
-
-
-                    }
-                    else if (slot.name.Equals("Slot 2"))
-                    {
-                        ufoCol2.Push(slot);
-                        slot.orderOfTrio = current.orderOfTrio;
-                        slot.circleRenderer.material.color = current.color2;
-
-                    }
-                }
-
+                Grid newSlot = Instantiate(gridPrefab, new Vector3(transform.position.x + (i % 3)*editorScale, 0f, transform.position.z - (i / 3)*editorScale), Quaternion.identity);
+                newSlot.InitializeAsSlot(i);
+                newSlot.transform.localScale *= editorScale;
+                newSlot.transform.SetParent(ufoEditor.transform);
+                newSlot.circleRenderer.material.color = levelData.ufoData[i].color;
             }
         }
 
@@ -394,10 +380,6 @@ namespace UfoPuzzle
 
         public void ResetSlots()
         {
-            ufoCol0.Clear();
-            ufoCol1.Clear();
-            ufoCol2.Clear();
-            numberOfUfoTrios = 0;
             Debug.Log($"Destroying object: {ufoEditor.gameObject.name}");
             Destroy(ufoEditor.gameObject);
             ufoEditor = new GameObject("Ufo Editor");
@@ -415,65 +397,6 @@ namespace UfoPuzzle
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             return results.Count > 0;
         }
-
-        private void handleStack()
-        {
-            if (numberOfUfoTrios > ufoCol0.Count)
-            {
-                
-                moveTriosDown();
-                UfoTrio newTrio = Instantiate(trioPrefab, transform.position, quaternion.identity);
-                newTrio.Initialize();
-                newTrio.transform.SetParent(ufoEditor.transform);
-                editorScale = (float)Mathf.Max(mapSize.x, mapSize.y) / (Mathf.Max(mapSize.x, mapSize.y) + 2);
-                newTrio.transform.localScale *= editorScale;
-                SlotData slotData = new SlotData();
-                var slots = newTrio.GetComponentsInChildren<Grid>();
-                foreach (Grid slot in slots)
-                {
-                    if (slot.name.Equals("Slot 0"))
-                    {
-                        ufoCol0.Push(slot);
-                        slot.orderOfTrio = ufoCol0.Count;
-                    }
-                    else if (slot.name.Equals("Slot 1"))
-                    {
-                        ufoCol1.Push(slot);
-                        slot.orderOfTrio = ufoCol1.Count;
-
-                    }
-                    else if (slot.name.Equals("Slot 2"))
-                    {
-                        ufoCol2.Push(slot);
-                        slot.orderOfTrio = ufoCol2.Count;
-
-                    }
-                    else
-                    {
-                        Debug.Log("Something is horribly wrong here");
-                    }
-                }
-
-                slotData.orderOfTrio = ufoCol0.Count;
-                slotData.color0 = ufoCol0.Peek().circleRenderer.material.color;
-                slotData.color1 = ufoCol1.Peek().circleRenderer.material.color;
-                slotData.color2 = ufoCol2.Peek().circleRenderer.material.color;
-                levelData.slotData.Add(slotData);
-            }
-            else if (numberOfUfoTrios < ufoCol0.Count)
-            {
-                moveTriosUp();
-                levelData.slotData.RemoveAll(x => x.orderOfTrio == ufoCol0.Count);
-                Grid grid = ufoCol0.Pop();
-                Destroy(grid.gameObject);
-                grid = ufoCol1.Pop();
-                Destroy(grid.gameObject);
-                grid = ufoCol2.Pop();
-                Destroy(grid.GetComponentInParent<UfoTrio>().gameObject);
-                Destroy(grid.gameObject);
-            }
-        }
-
         private void moveTriosDown()
         {
             List<GameObject> children = new List<GameObject>();

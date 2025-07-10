@@ -16,12 +16,10 @@ namespace UfoPuzzle
         public void Initialize(TileData tileData)
         {
             position = tileData.position;
-            color = tileData.color;
             transform.position = new Vector3(position.x, 0f, position.y);
             circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
             circle.transform.SetParent(transform);
             circleRenderer = circle.circleRenderer;
-            circleRenderer.material.color = color;
             // meshFilter.mesh = meshes[(position.x + position.y) % meshes.Count];
         }
 
