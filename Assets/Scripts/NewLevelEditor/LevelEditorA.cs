@@ -115,10 +115,9 @@ namespace UfoPuzzle
                                 difference = (transform.position - grid.transform.position) / editorScale;
                                 Debug.Log(difference);
                                 // this difference is of the form (i % 3, 0, i / 3) where i is the slot index
-                                int index = -(int)difference.z * 3 + (int)difference.x;
-                                index *= -1;
+                                float index = difference.z * 3 - difference.x;
                                 Debug.Log(index);
-                                levelData.ufoData[index].color = colorDict[paintColor];
+                                levelData.ufoData[Mathf.RoundToInt(index)].color = colorDict[paintColor];
 
                             }
                         }
