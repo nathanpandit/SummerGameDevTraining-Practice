@@ -13,11 +13,16 @@ namespace UfoPuzzle
         public Slot slotPrefab;
         public List<Transform> spawnPoints = new List<Transform>(3);
         private Transform ufoParent;
-        private int ufoCount = 0;
+        private GameObject slotParent;
+        private int ufoCount;
         public Dictionary<Transform, bool> spawnSlots = new Dictionary<Transform, bool>();
 
         public void Initialize(List<UfoData> _ufoData)
         {
+            ufoCount = 0;
+            if(slotParent != null) Destroy(slotParent);
+            slotParent = new GameObject("Slots");
+            spawnPoints.Clear();
             UfoData = _ufoData;
             
             Ray ray0 = Camera.main.ScreenPointToRay(new Vector3(Screen.width * .4f, Screen.height * .15f, 0));
@@ -29,32 +34,31 @@ namespace UfoPuzzle
             if (plane.Raycast(ray0, out float distance))
             {
                 Vector3 targetPosition = ray0.GetPoint(distance);
-                Debug.Log("1");
-                spawnPoints.Add(new GameObject("Slot 0").transform);
-                spawnPoints[0].position = targetPosition;
-                Debug.Log("2");
                 Slot slot = Instantiate(slotPrefab, targetPosition, quaternion.identity);
+                slot.gameObject.name = "Slot 0";
+                slot.gameObject.transform.SetParent(slotParent.transform);
+                spawnPoints.Add(slot.gameObject.transform);
+                spawnPoints[0].position = targetPosition;
+                ;
             }
             if (plane.Raycast(ray1, out distance))
             {
                 Vector3 targetPosition = ray1.GetPoint(distance);
-                Debug.Log("3");
-                spawnPoints.Add(new GameObject("Slot 1").transform);
-                spawnPoints[1].position = targetPosition;
-                Debug.Log("4");
-
                 Slot slot = Instantiate(slotPrefab, targetPosition, quaternion.identity);
-
+                slot.gameObject.name = "Slot 1";
+                slot.gameObject.transform.SetParent(slotParent.transform);
+                spawnPoints.Add(slot.gameObject.transform);
+                spawnPoints[1].position = targetPosition;
+                
             }
             if (plane.Raycast(ray2, out distance))
             {
                 Vector3 targetPosition = ray2.GetPoint(distance);
-                Debug.Log("5");
-                spawnPoints.Add(new GameObject("Slot 2").transform);
-                spawnPoints[2].position = targetPosition;
-                Debug.Log("6");
-
                 Slot slot = Instantiate(slotPrefab, targetPosition, quaternion.identity);
+                slot.gameObject.name = "Slot 2";
+                slot.gameObject.transform.SetParent(slotParent.transform);
+                spawnPoints.Add(slot.gameObject.transform);
+                spawnPoints[2].position = targetPosition;
             }
             
             for (int i = 0; i < 3; i++)
@@ -66,6 +70,8 @@ namespace UfoPuzzle
 
             }
             
+            if(ufoParent != null) Destroy(ufoParent.gameObject);
+            
             ufoParent = new GameObject("Ufos").transform;
             SpawnInitialBlocks();
         }
@@ -74,26 +80,17 @@ namespace UfoPuzzle
         {
             for (int i = 0; i < 3; i++)
             {
-                Debug.Log("9");
-
                 spawnSlots[spawnPoints[i]] = true;
-                Debug.Log("10");
-
                 SpawnUfo();
             }
         }
 
         private void SpawnUfo()
         {
-            Debug.Log("11");
-
+            Debug.Log($"Current ufo count is {ufoCount}");
             UfoData ufoData = UfoData[ufoCount];
-            Debug.Log("12");
-
-
+            Debug.Log(ufoData.color);
             Ufo newUfo = Instantiate(ufoPrefab, spawnPoints[ufoCount%3].position, quaternion.identity);
-            Debug.Log("13");
-
             newUfo.gameObject.name = $"Ufo {ufoCount}";
             newUfo.transform.SetParent(ufoParent);
             newUfo.ufoRenderer.material.color = ufoData.color;

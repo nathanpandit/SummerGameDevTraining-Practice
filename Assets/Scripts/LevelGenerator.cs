@@ -21,7 +21,6 @@ namespace UfoPuzzle
 
         private void Start()
         {
-            level = 1;
             Application.targetFrameRate = 60;
             ReadLevelData();
             var data = GenerateLevel();
