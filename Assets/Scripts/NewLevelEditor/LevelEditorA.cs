@@ -95,7 +95,6 @@ namespace UfoPuzzle
                                 tileData.position = grid.position;
                                 circleData.position = grid.position;
                                 circleData.color = grid.circleRenderer.material.color;
-                                // tileData.isActive = true;
                                 //if exist find and update data in list
                                 if (levelData.tileData.Exists(x => x.position == tileData.position))
                                 {
@@ -145,7 +144,6 @@ namespace UfoPuzzle
                             tileData.position = new Vector2Int(finalX, finalZ);
                             circleData.position = new Vector2Int(finalX, finalZ);
                             circleData.color = emptyGridColor;
-                            // tileData.isActive = false;
                             levelData.tileData.Add(tileData);
                             levelData.circleData.Add(circleData);
                         }
@@ -171,7 +169,6 @@ namespace UfoPuzzle
                                 circleData.color = grid.circleRenderer.material.color;
                                 circleData.position = grid.position;
                                 tileData.position = grid.position;
-                                // tileData.isActive = false;
                                 levelData.tileData.Add(tileData);
                                 levelData.circleData.Add(circleData);
                         }
@@ -313,21 +310,15 @@ namespace UfoPuzzle
             }
 
             var cells = tileParent.GetComponentsInChildren<Grid>();
-            foreach (var circleData in levelData.circleData)
+            
+            foreach (var tileData in levelData.tileData)
             {
-                var grid = cells.FirstOrDefault(x => x.position == circleData.position);
+                var grid = cells.FirstOrDefault(x => x.position == tileData.position);
                 if (grid != null)
                 {
+                    Debug.Log("We are marking the grid as exists");
                     grid.exists = true;
-                    /*
-                    if (tile.isActive)
-                    {
-                        grid.circle.gameObject.SetActive(true);
-                        grid.circleRenderer.material.color = tile.color;
-                    } */
-                    
                 }
-                
             }
             
             foreach (var grid in cells)
@@ -337,7 +328,20 @@ namespace UfoPuzzle
                     grid.delete(levelData);
                 }
             }
-
+            
+            foreach (var circleData in levelData.circleData)
+            {
+                Debug.Log($"looking for grid in {circleData.position}");
+                var grid = cells.FirstOrDefault(x => x.position == circleData.position);
+                if (grid != null)
+                {
+                    grid.circle.gameObject.SetActive(true);
+                    grid.circleRenderer.material.color = circleData.color;
+                }
+            }
+            
+            Destroy(ufoEditor.gameObject);
+            ufoEditor = new GameObject("Ufo Editor");
             int max = levelData.ufoData.Count;
             for (int i = 0; i < max; i++)
             {
