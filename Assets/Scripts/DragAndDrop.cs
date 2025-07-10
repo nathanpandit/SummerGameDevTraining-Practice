@@ -23,7 +23,9 @@ namespace UfoPuzzle
                         break;
                     case TouchPhase.Moved:
                         if (selectedUfo)
+                        {
                             HandleUfoDragging(touch.position);
+                        }
                         break;
                     case TouchPhase.Ended:
                         if (selectedUfo)
