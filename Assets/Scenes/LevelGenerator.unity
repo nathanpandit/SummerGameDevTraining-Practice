@@ -154,6 +154,7 @@ MonoBehaviour:
   level: 1
   levelParent: {fileID: 0}
   ufoPrefab: {fileID: 3185150946966346028, guid: 0012a066da164c94abc0a2ee42a9a970, type: 3}
+  ufoSpawner: {fileID: 1581174498}
 --- !u!4 &578119339
 Transform:
   m_ObjectHideFlags: 0
@@ -208,6 +209,53 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.775517, y: 3.0088472, z: 3.5604682}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1581174497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1581174499}
+  - component: {fileID: 1581174498}
+  m_Layer: 0
+  m_Name: UfoSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1581174498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581174497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d0a28c36ab2b7449a9ba206431b50a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ufoPrefab: {fileID: 3185150946966346028, guid: 0012a066da164c94abc0a2ee42a9a970, type: 3}
+  slotPrefab: {fileID: 484152884174059682, guid: 4faf4583dd0d1cd4c86532387374e8bb, type: 3}
+  spawnPoints: []
+--- !u!4 &1581174499
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581174497}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.697598, y: 1.7186865, z: 4.5993214}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -357,3 +405,4 @@ SceneRoots:
   - {fileID: 969598207}
   - {fileID: 578119339}
   - {fileID: 1904347635}
+  - {fileID: 1581174499}

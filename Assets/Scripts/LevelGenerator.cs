@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace UfoPuzzle
@@ -15,6 +16,8 @@ namespace UfoPuzzle
         public int level;
         public GameObject levelParent;
         public Ufo ufoPrefab;
+
+        public UfoSpawner ufoSpawner;
 
         private void Start()
         {
@@ -77,6 +80,22 @@ namespace UfoPuzzle
                 tile.Initialize(tileData);
                 tiles.Add(tile);
             }
+
+            foreach (CircleData circleData in levelData.circleData)
+            {
+                Tile currentTile = tiles.Find(x => x.position == circleData.position);
+                if (currentTile != null)
+                {
+                    currentTile.circle.gameObject.SetActive(true);
+                    currentTile.circleRenderer.material.color = circleData.color;
+                }
+                else
+                {
+                    Debug.Log("why is this tile null");
+                }
+            }
+            
+            ufoSpawner.Initialize(levelData.ufoData);
 
             return tiles;
         }

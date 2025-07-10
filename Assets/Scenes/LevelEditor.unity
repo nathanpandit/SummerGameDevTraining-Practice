@@ -384,7 +384,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f8d65e8f0db428587d55110cb51c8f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: {x: 11, y: 11}
+  mapSize: {x: 5, y: 5}
+  objectType: 0
   level: 1
   tileParent: {fileID: 407823053}
   rulersParent: {fileID: 221675700259299108, guid: d9a407019db245f45b1caed2e1eb1764, type: 3}
@@ -392,12 +393,10 @@ MonoBehaviour:
   rulerTextPrefab: {fileID: 494014749802302348, guid: d9a407019db245f45b1caed2e1eb1764, type: 3}
   emptyGridColor: {r: 1, g: 1, b: 1, a: 0}
   paintColor: 0
-  eraseMode: 0
-  paintMode: 0
-  addUfoTrio: 0
-  removeUfoTrio: 0
   ufoEditor: {fileID: 0}
   trioPrefab: {fileID: 102718133991136118, guid: 47903bb62ccd6a84fa6ae3d3384f4af5, type: 3}
+  ufoList: []
+  numberOfUfoTrios: 3
 --- !u!4 &1201609720
 Transform:
   m_ObjectHideFlags: 0

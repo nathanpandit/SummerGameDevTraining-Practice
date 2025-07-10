@@ -160,17 +160,10 @@ namespace UfoPuzzle
                     Grid grid = hit.collider.GetComponent<Grid>();
                     if (grid != null)
                     {
-                        levelData.tileData.RemoveAll(x => x.position == grid.position);
-                        if (objectType == ObjectType.Circle && !grid.isSlot) 
-                        {
+                        if (objectType == ObjectType.Circle && !grid.isSlot)
+                        { 
                                 grid.emptyGrid();
-                                TileData tileData = new TileData();
-                                CircleData circleData = new CircleData();
-                                circleData.color = grid.circleRenderer.material.color;
-                                circleData.position = grid.position;
-                                tileData.position = grid.position;
-                                levelData.tileData.Add(tileData);
-                                levelData.circleData.Add(circleData);
+                                levelData.circleData.RemoveAll(x => x.position == grid.position);
                         }
                         else if (objectType == ObjectType.Ufo && grid.isSlot)
                         {
@@ -186,6 +179,10 @@ namespace UfoPuzzle
                         }
                         else if(!grid.isSlot && objectType == ObjectType.Tile)
                         {
+                            if (levelData.circleData.Exists(x => x.position == grid.position))
+                            {
+                                levelData.circleData.RemoveAll(x => x.position == grid.position);
+                            }
                             grid.delete(levelData);
                         }
                     }

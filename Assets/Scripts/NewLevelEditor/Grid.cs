@@ -65,9 +65,7 @@ namespace UfoPuzzle
             }
             Destroy(gameObject);
         }
-        
-        
-        
+
     }
 
 }
