@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public static class GameManager
 {
-    // Start is called before the first frame update
-    [SerializeField] public static int currentLevel;
-    
-    void Start()
-    {
-        currentLevel = 1;
-    }
-
-    // Update is called once per frame
-    void Update()
+    public static void HandleUfoRelease(Ufo ufo)
     {
         
+    }
+
+    public static void HighLightTile(Ufo ufo)
+    {
+        
+    }
+
+    public static bool IsPointerOverUIObject()
+    {
+        return true;
     }
 }
