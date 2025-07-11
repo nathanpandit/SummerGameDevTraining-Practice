@@ -94,6 +94,7 @@ namespace UfoPuzzle
             newUfo.gameObject.name = $"Ufo {ufoCount}";
             newUfo.transform.SetParent(ufoParent);
             newUfo.ufoRenderer.material.color = ufoData.color;
+            newUfo.originalPos = newUfo.transform.position;
             ufoCount++;
         }
     }

@@ -7,7 +7,6 @@ namespace UfoPuzzle
     {
         private Ufo selectedUfo;
         private Vector3 offset;
-        private float length;
 
         private void Update()
         {
@@ -61,16 +60,15 @@ namespace UfoPuzzle
         private void HandleUfoSelection(Vector2 touchPosition)
         {
             Ray ray = Camera.main.ScreenPointToRay(touchPosition);
-            if (Physics.Raycast(ray, out RaycastHit hit) && GameManager.IsPointerOverUIObject() == false)
+            if (Physics.Raycast(ray, out RaycastHit hit) /* && GameManager.IsPointerOverUIObject() == false */)
             {
                 selectedUfo = hit.transform.GetComponentInParent<Ufo>();
-                if (selectedUfo != null && !selectedUfo.isPlaced)
+                if (selectedUfo != null)
                 {
                     offset = selectedUfo.transform.position - hit.point;
-                    length = selectedUfo.maxPos.y - selectedUfo.minPos.y;
                     // AudioController.Instance.PlayAudio(SoundType.Button);
                     // HapticManager.Play(HapticType.Low_Intensity);
-                    selectedUfo.transform.position += new Vector3(0, .7f, length + 2.1f);
+                    selectedUfo.transform.position += new Vector3(0, .7f, 1f);
                     selectedUfo.transform.localScale = Vector3.one;
                 }
                 else
@@ -88,7 +86,7 @@ namespace UfoPuzzle
             if (plane.Raycast(ray, out float distance))
             {
                 Vector3 targetPosition = ray.GetPoint(distance) + offset;
-                selectedUfo.transform.position = targetPosition + new Vector3(0, .7f, length + 2.1f);
+                selectedUfo.transform.position = targetPosition + new Vector3(0, .7f, 1f);
                 if (!selectedUfo.IsSamePosition())
                 {
                     GameManager.HighLightTile(selectedUfo);

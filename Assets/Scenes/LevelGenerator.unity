@@ -151,7 +151,7 @@ MonoBehaviour:
   tilePrefab: {fileID: -2331820405305684121, guid: 3b615b65cee057649afea842c988617f, type: 3}
   slotPrefab: {fileID: 484152884174059682, guid: 4faf4583dd0d1cd4c86532387374e8bb, type: 3}
   levelHelper: {fileID: 969598206}
-  level: 1
+  level: 2
   levelParent: {fileID: 0}
   ufoPrefab: {fileID: 3185150946966346028, guid: 0012a066da164c94abc0a2ee42a9a970, type: 3}
   ufoSpawner: {fileID: 1581174498}

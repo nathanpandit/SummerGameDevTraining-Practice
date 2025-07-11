@@ -24,6 +24,7 @@ namespace UfoPuzzle
             Application.targetFrameRate = 60;
             ReadLevelData();
             var data = GenerateLevel();
+            GameManager.Initialize(data.Item1, data.Item2, data.Item3);
 
             /*if (levelHelper.GetCurrentLevel() == 1)
             {
@@ -56,7 +57,7 @@ namespace UfoPuzzle
             levelData = JsonUtility.FromJson<LevelData>(json);
         }
         
-        private List<Tile> GenerateLevel()
+        private (List<Tile>, List<Circle>, List<Ufo>) GenerateLevel()
         {
             if (levelParent)
             {
@@ -73,6 +74,8 @@ namespace UfoPuzzle
             var tileParent = new GameObject("Tiles");
             tileParent.transform.SetParent(levelParent.transform);
             var tiles = new List<Tile>();
+            var circles = new List<Circle>();
+            var ufos = new List<Ufo>();
             foreach (var tileData in levelData.tileData)
             {
                 var tile = Instantiate(tilePrefab, new Vector3(tileData.position.x, 0, tileData.position.y), Quaternion.identity, tileParent.transform);
@@ -87,6 +90,7 @@ namespace UfoPuzzle
                 {
                     currentTile.circle.gameObject.SetActive(true);
                     currentTile.circleRenderer.material.color = circleData.color;
+                    circles.Add(currentTile.circle);
                 }
                 else
                 {
@@ -94,9 +98,14 @@ namespace UfoPuzzle
                 }
             }
             
-            ufoSpawner.Initialize(levelData.ufoData);
+            ufoSpawner.Initialize(levelData.ufoData); ;
 
-            return tiles;
+            foreach (UfoData ufoData in levelData.ufoData)
+            {
+                
+            }
+
+            return (tiles, circles, ufos);
         }
 
     }

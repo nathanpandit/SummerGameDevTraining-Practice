@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -20,13 +22,13 @@ namespace UfoPuzzle
         
         public static void HandleUfoRelease(Ufo ufo)
         {
+            ufo.transform.localScale = new Vector3(0.9f, 0.01f, 0.9f);
             if (IsPositionValid(ufo))
             {
                 // If all positions are valid, snap to the rounded position
-                ufo.isPlaced = true;
-
                 ufos.Remove(ufo);
-                EventManager.Instance.TriggerEvent(new BlockReleasedEvent(block.spawnTransform));
+                Debug.Log("Removed ufo");
+                // EventManager.Instance.TriggerEvent(new BlockReleasedEvent(block.spawnTransform));
             }
             else
             {
@@ -39,7 +41,21 @@ namespace UfoPuzzle
 
         private static bool IsPositionValid(Ufo ufo)
         {
-            return true;
+            Vector2Int position = new Vector2Int(Mathf.RoundToInt(ufo.transform.position.x),
+                Mathf.RoundToInt(ufo.transform.position.z));
+            Debug.Log($"Looking for tile in {position}");
+            if (tiles.Exists(x => x.position == position))
+            {
+                Debug.Log($"Found tile in {position}");
+                Tile tile = tiles.FirstOrDefault(x => x.position == position);
+                if (tile.circle.gameObject.activeSelf &&
+                    tile.circleRenderer.material.color == ufo.ufoRenderer.material.color)
+                {
+                    // empty for now
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static void ClearHighLight()
@@ -53,6 +69,7 @@ namespace UfoPuzzle
 
         }
 
+        /*
         public static bool IsPointerOverUIObject()
         {
             PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
@@ -61,5 +78,6 @@ namespace UfoPuzzle
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             return results.Count > 0;
         }
+        */
     }
 }

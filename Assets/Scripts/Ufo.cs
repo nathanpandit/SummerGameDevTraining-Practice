@@ -6,8 +6,7 @@ public class Ufo : MonoBehaviour
 {
     // Start is called before the first frame update
     public Renderer ufoRenderer;
-    public bool isPlaced;
-    public Vector2 maxPos, minPos;
+    public Vector3 originalPos;
     void Awake()
 
     {
@@ -17,5 +16,10 @@ public class Ufo : MonoBehaviour
     public bool IsSamePosition()
     {
         return true;
+    }
+
+    public void ResetPosition()
+    {
+        transform.position = originalPos;
     }
 }
