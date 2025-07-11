@@ -22,4 +22,9 @@ public class Ufo : MonoBehaviour
     {
         transform.position = originalPos;
     }
+
+    public void delete()
+    {
+        Destroy(gameObject);
+    }
 }

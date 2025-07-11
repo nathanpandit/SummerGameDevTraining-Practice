@@ -17,7 +17,7 @@ namespace UfoPuzzle
         private int ufoCount;
         public Dictionary<Transform, bool> spawnSlots = new Dictionary<Transform, bool>();
 
-        public void Initialize(List<UfoData> _ufoData)
+        public List<Ufo> Initialize(List<UfoData> _ufoData)
         {
             ufoCount = 0;
             if(slotParent != null) Destroy(slotParent);
@@ -73,19 +73,22 @@ namespace UfoPuzzle
             if(ufoParent != null) Destroy(ufoParent.gameObject);
             
             ufoParent = new GameObject("Ufos").transform;
-            SpawnInitialBlocks();
+            return SpawnInitialBlocks();
         }
         
-        public void SpawnInitialBlocks()
+        public List<Ufo> SpawnInitialBlocks()
         {
+            List<Ufo> ufos = new List<Ufo>();
             for (int i = 0; i < 3; i++)
             {
                 spawnSlots[spawnPoints[i]] = true;
-                SpawnUfo();
+                ufos.Add(SpawnUfo());
             }
+
+            return ufos;
         }
 
-        private void SpawnUfo()
+        private Ufo SpawnUfo()
         {
             Debug.Log($"Current ufo count is {ufoCount}");
             UfoData ufoData = UfoData[ufoCount];
@@ -96,6 +99,7 @@ namespace UfoPuzzle
             newUfo.ufoRenderer.material.color = ufoData.color;
             newUfo.originalPos = newUfo.transform.position;
             ufoCount++;
+            return newUfo;
         }
     }
 }

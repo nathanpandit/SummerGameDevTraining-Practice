@@ -98,12 +98,7 @@ namespace UfoPuzzle
                 }
             }
             
-            ufoSpawner.Initialize(levelData.ufoData); ;
-
-            foreach (UfoData ufoData in levelData.ufoData)
-            {
-                
-            }
+            ufos = ufoSpawner.Initialize(levelData.ufoData); ;
 
             return (tiles, circles, ufos);
         }
