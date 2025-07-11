@@ -80,6 +80,7 @@ namespace UfoPuzzle
         
         private void HandleUfoDragging(Vector2 touchPosition)
         {
+            // GameManager.IsPositionValid(selectedUfo);
             Ray ray = Camera.main.ScreenPointToRay(touchPosition);
             Plane plane = new Plane(Vector3.up, Vector3.up/2.0f);
             
@@ -89,7 +90,7 @@ namespace UfoPuzzle
                 selectedUfo.transform.position = targetPosition + new Vector3(0, .7f, 1f);
                 if (!selectedUfo.IsSamePosition())
                 {
-                    GameManager.HighLightTile(selectedUfo);
+                    // GameManager.HighLightTile(selectedUfo);
                 }
             }
         }

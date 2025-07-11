@@ -12,6 +12,7 @@ namespace UfoPuzzle
         public Circle circlePrefab;
         public Circle circle;
         public Renderer circleRenderer;
+        public bool isVisited;
 
         public void Initialize(TileData tileData)
         {
@@ -20,6 +21,7 @@ namespace UfoPuzzle
             circle = Instantiate(circlePrefab, transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
             circle.transform.SetParent(transform);
             circleRenderer = circle.circleRenderer;
+            isVisited = false;
             // meshFilter.mesh = meshes[(position.x + position.y) % meshes.Count];
         }
 
