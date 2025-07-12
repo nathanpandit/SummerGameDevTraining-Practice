@@ -80,7 +80,7 @@ namespace UfoPuzzle
         
         private void HandleUfoDragging(Vector2 touchPosition)
         {
-            // GameManager.IsPositionValid(selectedUfo);
+            GameManager.IsPositionValid(selectedUfo);
             Ray ray = Camera.main.ScreenPointToRay(touchPosition);
             Plane plane = new Plane(Vector3.up, Vector3.up/2.0f);
             

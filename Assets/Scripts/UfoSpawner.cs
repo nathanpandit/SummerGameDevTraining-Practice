@@ -16,6 +16,7 @@ namespace UfoPuzzle
         private GameObject slotParent;
         private int ufoCount;
         public Dictionary<Transform, bool> spawnSlots = new Dictionary<Transform, bool>();
+        List<Ufo> ufoList = new List<Ufo>();
 
         public List<Ufo> Initialize(List<UfoData> _ufoData)
         {
@@ -63,43 +64,44 @@ namespace UfoPuzzle
             
             for (int i = 0; i < 3; i++)
             {
-                Debug.Log("7");
-
                 spawnSlots.Add(spawnPoints[i], true);
-                Debug.Log("8");
-
             }
             
             if(ufoParent != null) Destroy(ufoParent.gameObject);
             
             ufoParent = new GameObject("Ufos").transform;
-            return SpawnInitialBlocks();
+            Debug.Log(_ufoData.Count);
+            for(int i = 0; i < _ufoData.Count; i++)
+            {
+                Ufo newUfo = Instantiate(ufoPrefab, transform.position, quaternion.identity);
+                newUfo.ufoRenderer.material.color = _ufoData[i].color;
+                newUfo.gameObject.SetActive(false);
+                newUfo.gameObject.name = $"Ufo {i}";
+                newUfo.originalPos = spawnPoints[i % 3].position;
+                ufoList.Add(newUfo);
+            }
+            
+            SpawnInitialBlocks();
+
+            return ufoList;
         }
         
-        public List<Ufo> SpawnInitialBlocks()
+        public void SpawnInitialBlocks()
         {
-            List<Ufo> ufos = new List<Ufo>();
             for (int i = 0; i < 3; i++)
             {
                 spawnSlots[spawnPoints[i]] = true;
-                ufos.Add(SpawnUfo());
+                SpawnUfo();
             }
-
-            return ufos;
         }
 
-        private Ufo SpawnUfo()
+        private void SpawnUfo()
         {
             Debug.Log($"Current ufo count is {ufoCount}");
-            UfoData ufoData = UfoData[ufoCount];
-            Debug.Log(ufoData.color);
-            Ufo newUfo = Instantiate(ufoPrefab, spawnPoints[ufoCount%3].position, quaternion.identity);
-            newUfo.gameObject.name = $"Ufo {ufoCount}";
-            newUfo.transform.SetParent(ufoParent);
-            newUfo.ufoRenderer.material.color = ufoData.color;
-            newUfo.originalPos = newUfo.transform.position;
+            Ufo ufoToSpawn = ufoList[ufoCount];
+            ufoToSpawn.transform.position = ufoToSpawn.originalPos;
+            ufoToSpawn.gameObject.SetActive(true);
             ufoCount++;
-            return newUfo;
         }
     }
 }

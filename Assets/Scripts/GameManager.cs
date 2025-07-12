@@ -12,7 +12,8 @@ namespace UfoPuzzle
         public static List<Tile> tiles = new List<Tile>();
         public static List<Circle> circles = new List<Circle>();
         public static List<Ufo> ufos = new List<Ufo>();
-        public static List<Tile> HighlightedTiles;
+        public static List<Tile> HighlightedTiles = new List<Tile>();
+        public static List<Tile> VisitedTiles = new List<Tile>();
 
         public static void Initialize(List<Tile> _tiles, List<Circle> _circles, List<Ufo> _ufos)
         {
@@ -28,9 +29,16 @@ namespace UfoPuzzle
             {
                 // If all positions are valid, snap to the rounded position
                 Vector3 position = ufo.originalPos;
-                ufos.Remove(ufo);
-                ufo.delete();
+                ufo.gameObject.SetActive(false);
                 Debug.Log("Removed ufo");
+                int nextIndex = ufos.IndexOf(ufo) + 3;
+                if (nextIndex < ufos.Count)
+                {
+                    Ufo newUfo = ufos[nextIndex];
+                    newUfo.transform.position = ufo.originalPos;
+                    ufos[nextIndex].gameObject.SetActive(true);
+                }
+                Debug.Log("Spawned next ufo from data");
                 // EventManager.Instance.TriggerEvent(new BlockReleasedEvent(block.spawnTransform));
             }
             else
@@ -39,7 +47,6 @@ namespace UfoPuzzle
                 ufo.ResetPosition();
             }
             
-            ClearHighLight();
         }
 
         public static bool IsPositionValid(Ufo ufo)
@@ -55,9 +62,15 @@ namespace UfoPuzzle
                     tile.circleRenderer.material.color == ufo.ufoRenderer.material.color)
                 {
                     HighLightCircle(tile, ufo.ufoRenderer.material.color);
+                    foreach (Tile t in VisitedTiles)
+                    {
+                        t.isVisited = false;
+                    }
+                    VisitedTiles.Clear();
                     return true;
                 }
             }
+            ClearHighLight();
             return false;
         }
 
@@ -65,8 +78,7 @@ namespace UfoPuzzle
         {
             foreach (Tile _tile in HighlightedTiles)
             {
-                _tile.circleRenderer.material.color = new Color(_tile.circleRenderer.material.color.r,
-                    _tile.circleRenderer.material.color.g, _tile.circleRenderer.material.color.b, 1f);
+                _tile.circleRenderer.material.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
                 HighlightedTiles.Remove(_tile);
             }
         }
@@ -74,20 +86,19 @@ namespace UfoPuzzle
 
         public static void HighLightCircle(Tile _tile, Color color)
         {
+            Debug.Log("Entered highlight function");
+            _tile.isVisited = true;
+            VisitedTiles.Add(_tile);
             if (_tile.circleRenderer.material.color != color)
             {
-                _tile.isVisited = true;
                 return;
             }
-            _tile.isVisited = true;
-            _tile.circleRenderer.material.color = new Color(_tile.circleRenderer.material.color.r,
-                _tile.circleRenderer.material.color.g, _tile.circleRenderer.material.color.b, 0.5f);
+            _tile.circleRenderer.material.color = new Color(0f, 0f, 0f, 1f);
             HighlightedTiles.Add(_tile);
             List<Tile> allNeighbors = new List<Tile>();
             Vector2Int position = _tile.position;
 
             Debug.Log($"Found tile in {position}");
-            Tile tile = tiles.FirstOrDefault(x => x.position == position);
             Tile tile0 = tiles.FirstOrDefault(x => x.position == new Vector2Int(position.x + 1, position.y));
             if(tile0 != null && !tile0.isVisited) allNeighbors.Add(tile0);
             Tile tile1 = tiles.FirstOrDefault(x => x.position == new Vector2Int(position.x, position.y - 1));
