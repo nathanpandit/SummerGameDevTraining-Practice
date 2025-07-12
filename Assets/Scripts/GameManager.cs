@@ -78,9 +78,10 @@ namespace UfoPuzzle
         {
             foreach (Tile _tile in HighlightedTiles)
             {
-                _tile.circleRenderer.material.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-                HighlightedTiles.Remove(_tile);
+                _tile.circle.highlight.SetActive(false);
             }
+
+            HighlightedTiles.Clear();
         }
 
 
@@ -91,9 +92,13 @@ namespace UfoPuzzle
             VisitedTiles.Add(_tile);
             if (_tile.circleRenderer.material.color != color)
             {
+                Debug.Log(_tile.circleRenderer.material.color);
+                Debug.Log(color);
+                Debug.Log("Tile is not the same color as ufo.");
                 return;
             }
-            _tile.circleRenderer.material.color = new Color(0f, 0f, 0f, 1f);
+            _tile.circle.highlight.SetActive(true);
+            // _tile.circle.highlight.transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(0f, 0f, 0f, 1f);
             HighlightedTiles.Add(_tile);
             List<Tile> allNeighbors = new List<Tile>();
             Vector2Int position = _tile.position;
