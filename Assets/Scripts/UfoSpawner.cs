@@ -75,6 +75,7 @@ namespace UfoPuzzle
             {
                 Ufo newUfo = Instantiate(ufoPrefab, transform.position, quaternion.identity);
                 newUfo.ufoRenderer.material.color = _ufoData[i].color;
+                newUfo.color = _ufoData[i].color;
                 newUfo.gameObject.SetActive(false);
                 newUfo.gameObject.name = $"Ufo {i}";
                 newUfo.originalPos = spawnPoints[i % 3].position;

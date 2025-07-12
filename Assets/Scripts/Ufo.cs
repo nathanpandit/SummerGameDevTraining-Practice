@@ -7,6 +7,7 @@ public class Ufo : MonoBehaviour
     // Start is called before the first frame update
     public Renderer ufoRenderer;
     public Vector3 originalPos;
+    public Color color;
     void Awake()
 
     {

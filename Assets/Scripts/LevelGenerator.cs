@@ -90,6 +90,7 @@ namespace UfoPuzzle
                 {
                     currentTile.circle.gameObject.SetActive(true);
                     currentTile.circleRenderer.material.color = circleData.color;
+                    currentTile.circle.color = circleData.color;
                     circles.Add(currentTile.circle);
                 }
                 else

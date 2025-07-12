@@ -28,10 +28,14 @@ namespace UfoPuzzle
             if (IsPositionValid(ufo))
             {
                 // If all positions are valid, snap to the rounded position
-                Vector3 position = ufo.originalPos;
                 ufo.gameObject.SetActive(false);
                 Debug.Log("Removed ufo");
                 int nextIndex = ufos.IndexOf(ufo) + 3;
+                foreach (Tile t in HighlightedTiles)
+                {
+                    t.circle.gameObject.SetActive(false);
+                }
+                HighlightedTiles.Clear();
                 if (nextIndex < ufos.Count)
                 {
                     Ufo newUfo = ufos[nextIndex];
@@ -59,9 +63,9 @@ namespace UfoPuzzle
                 Debug.Log($"Found tile in {position}");
                 Tile tile = tiles.FirstOrDefault(x => x.position == position);
                 if (tile.circle.gameObject.activeSelf &&
-                    tile.circleRenderer.material.color == ufo.ufoRenderer.material.color)
+                    tile.circle.color == ufo.color)
                 {
-                    HighLightCircle(tile, ufo.ufoRenderer.material.color);
+                    HighLightCircle(tile, ufo.color);
                     foreach (Tile t in VisitedTiles)
                     {
                         t.isVisited = false;
@@ -78,7 +82,7 @@ namespace UfoPuzzle
         {
             foreach (Tile _tile in HighlightedTiles)
             {
-                _tile.circle.highlight.SetActive(false);
+                _tile.circleRenderer.material.color = _tile.circle.color;
             }
 
             HighlightedTiles.Clear();
@@ -90,16 +94,15 @@ namespace UfoPuzzle
             Debug.Log("Entered highlight function");
             _tile.isVisited = true;
             VisitedTiles.Add(_tile);
-            if (_tile.circleRenderer.material.color != color)
+            if (_tile.circle.gameObject.activeSelf && _tile.circle.color != color)
             {
-                Debug.Log(_tile.circleRenderer.material.color);
-                Debug.Log(color);
-                Debug.Log("Tile is not the same color as ufo.");
                 return;
             }
-            _tile.circle.highlight.SetActive(true);
-            // _tile.circle.highlight.transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(0f, 0f, 0f, 1f);
-            HighlightedTiles.Add(_tile);
+            else if (_tile.circle.gameObject.activeSelf)
+            {
+                HighlightedTiles.Add(_tile);
+                _tile.circleRenderer.material.color = Color.black;
+            }
             List<Tile> allNeighbors = new List<Tile>();
             Vector2Int position = _tile.position;
 
