@@ -11,9 +11,7 @@ namespace UfoPuzzle
         private LevelData levelData;
         public Tile tilePrefab;
         public Slot slotPrefab;
-        public LevelHelper levelHelper;
         private GameObject tutorialObject => Resources.Load<GameObject>("TutorialObject");
-        public int level;
         public GameObject levelParent;
         public Ufo ufoPrefab;
 
@@ -37,14 +35,14 @@ namespace UfoPuzzle
         {
             if (Input.GetKeyDown(KeyCode.N))
             {
-                level++; 
+                LevelHelper.currentLevel++; 
                 ReadLevelData();
                 var data = GenerateLevel();
             }
 
             if (Input.GetKeyDown(KeyCode.P))
             {
-                level--;
+                LevelHelper.currentLevel--;
                 ReadLevelData();
                 var data = GenerateLevel();
             }
@@ -52,7 +50,7 @@ namespace UfoPuzzle
         
         private void ReadLevelData()
         {
-            var levelIndex = level;
+            var levelIndex = LevelHelper.GetCurrentLevel();
             string json = Resources.Load<TextAsset>($"Levels/Level_{levelIndex}").text;
             levelData = JsonUtility.FromJson<LevelData>(json);
         }

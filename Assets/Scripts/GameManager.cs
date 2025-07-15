@@ -34,6 +34,7 @@ namespace UfoPuzzle
                 foreach (Tile t in HighlightedTiles)
                 {
                     t.circle.gameObject.SetActive(false);
+                    circles.Remove(t.circle);
                 }
                 HighlightedTiles.Clear();
                 if (nextIndex < ufos.Count)
@@ -41,8 +42,27 @@ namespace UfoPuzzle
                     Ufo newUfo = ufos[nextIndex];
                     newUfo.transform.position = ufo.originalPos;
                     ufos[nextIndex].gameObject.SetActive(true);
+                    Debug.Log("Spawned next ufo from data");
                 }
-                Debug.Log("Spawned next ufo from data");
+                else
+                {
+                    int numberOfUfos = ufos.Count(x => x.gameObject.activeSelf == true);
+                    if (numberOfUfos == 0)
+                    {
+                        LevelHelper.thereAreUfos = false;
+                    }
+                }
+
+                if (circles.Count() == 0)
+                {
+                    LevelHelper.circlesCleared = true;
+                }
+
+                if (LevelHelper.IsLevelWon())
+                {
+                    Debug.Log("Congratulations! You won the level!");
+                }
+
                 // EventManager.Instance.TriggerEvent(new BlockReleasedEvent(block.spawnTransform));
             }
             else
