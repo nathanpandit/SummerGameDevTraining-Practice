@@ -59,6 +59,13 @@ namespace UfoPuzzle
                 var data = GenerateLevel();
                 GameManager.Initialize(data.Item1, data.Item2, data.Item3);
             }
+            else if (LevelHelper.currentLevel < level)
+            {
+                LevelHelper.NextLevel();
+                ReadLevelData();
+                var data = GenerateLevel();
+                GameManager.Initialize(data.Item1, data.Item2, data.Item3);
+            }
         }
         
         private void ReadLevelData()

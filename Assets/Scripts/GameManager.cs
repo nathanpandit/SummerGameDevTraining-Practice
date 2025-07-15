@@ -57,11 +57,19 @@ namespace UfoPuzzle
                 {
                     LevelHelper.circlesCleared = true;
                 }
-
                 if (LevelHelper.IsLevelWon())
                 {
                     Debug.Log($"Congratulations! You won level {LevelHelper.GetCurrentLevel()}!");
                     LevelHelper.NextLevel();
+                }
+                else
+                {
+                    List<Ufo> currentUfos = ufos.FindAll(x => x.gameObject.activeSelf == true);
+                    if (LevelHelper.IsGameLost(currentUfos, circles))
+                    {
+                        Debug.Log($"You lost level {LevelHelper.GetCurrentLevel()}. Try again.");
+                        LevelHelper.currentLevel--;
+                    }
                 }
 
                 // EventManager.Instance.TriggerEvent(new BlockReleasedEvent(block.spawnTransform));
