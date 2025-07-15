@@ -60,7 +60,8 @@ namespace UfoPuzzle
 
                 if (LevelHelper.IsLevelWon())
                 {
-                    Debug.Log("Congratulations! You won the level!");
+                    Debug.Log($"Congratulations! You won level {LevelHelper.GetCurrentLevel()}!");
+                    LevelHelper.NextLevel();
                 }
 
                 // EventManager.Instance.TriggerEvent(new BlockReleasedEvent(block.spawnTransform));

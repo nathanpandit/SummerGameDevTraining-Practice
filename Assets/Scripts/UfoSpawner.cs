@@ -25,6 +25,7 @@ namespace UfoPuzzle
             slotParent = new GameObject("Slots");
             spawnPoints.Clear();
             UfoData = _ufoData;
+            ufoList.Clear();
             
             Ray ray0 = Camera.main.ScreenPointToRay(new Vector3(Screen.width * .4f, Screen.height * .15f, 0));
             Ray ray1 = Camera.main.ScreenPointToRay(new Vector3(Screen.width * .5f, Screen.height * .15f, 0));
@@ -79,6 +80,7 @@ namespace UfoPuzzle
                 newUfo.gameObject.SetActive(false);
                 newUfo.gameObject.name = $"Ufo {i}";
                 newUfo.originalPos = spawnPoints[i % 3].position;
+                newUfo.transform.SetParent(ufoParent);
                 ufoList.Add(newUfo);
             }
             

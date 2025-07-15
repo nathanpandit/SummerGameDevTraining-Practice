@@ -14,6 +14,7 @@ namespace UfoPuzzle
         private GameObject tutorialObject => Resources.Load<GameObject>("TutorialObject");
         public GameObject levelParent;
         public Ufo ufoPrefab;
+        private int level = 1;
 
         public UfoSpawner ufoSpawner;
 
@@ -35,16 +36,28 @@ namespace UfoPuzzle
         {
             if (Input.GetKeyDown(KeyCode.N))
             {
-                LevelHelper.currentLevel++; 
+                LevelHelper.currentLevel++;
+                level++;
                 ReadLevelData();
                 var data = GenerateLevel();
+                GameManager.Initialize(data.Item1, data.Item2, data.Item3);
             }
 
             if (Input.GetKeyDown(KeyCode.P))
             {
                 LevelHelper.currentLevel--;
+                level--;
                 ReadLevelData();
                 var data = GenerateLevel();
+                GameManager.Initialize(data.Item1, data.Item2, data.Item3);
+            }
+
+            if (LevelHelper.currentLevel > level)
+            {
+                level++;
+                ReadLevelData();
+                var data = GenerateLevel();
+                GameManager.Initialize(data.Item1, data.Item2, data.Item3);
             }
         }
         

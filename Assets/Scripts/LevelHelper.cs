@@ -3,37 +3,48 @@ using System.Collections.Generic;
 using UnityEditor.Build.Content;
 using UnityEngine;
 
-public static class LevelHelper
+namespace UfoPuzzle
 {
-    public static int currentLevel = 1;
-    public static bool circlesCleared;
-    public static bool thereAreUfos;
-    
-    public static int GetCurrentLevel()
+    public static class LevelHelper
     {
-        return currentLevel;
-    }
+        public static int currentLevel = 1;
+        public static bool circlesCleared;
+        public static bool thereAreUfos;
 
-    public static bool IsGameLost(List<Ufo> currentUfos, List<Circle> currentCircles)
-    {
-        return (!circlesCleared && !thereAreUfos) || (!circlesCleared  && !CanRemainingUfosWin(currentUfos, currentCircles));
-    }
-
-    public static bool CanRemainingUfosWin(List<Ufo> currentUfos, List<Circle> currentCircles)
-    {
-        foreach (Ufo ufo in currentUfos)
+        public static int GetCurrentLevel()
         {
-            if (!currentCircles.Exists(x => x.color == ufo.color))
-            {
-                return false;
-            }
+            return currentLevel;
         }
 
-        return true;
-    }
+        public static bool IsGameLost(List<Ufo> currentUfos, List<Circle> currentCircles)
+        {
+            return (!circlesCleared && !thereAreUfos) ||
+                   (!circlesCleared && !CanRemainingUfosWin(currentUfos, currentCircles));
+        }
 
-    public static bool IsLevelWon()
-    {
-        return circlesCleared;
+        public static bool CanRemainingUfosWin(List<Ufo> currentUfos, List<Circle> currentCircles)
+        {
+            foreach (Ufo ufo in currentUfos)
+            {
+                if (currentCircles.Exists(x => x.color == ufo.color))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IsLevelWon()
+        {
+            return circlesCleared;
+        }
+
+        public static void NextLevel()
+        {
+            currentLevel += 1;
+            circlesCleared = false;
+            thereAreUfos = true;
+        }
     }
 }
