@@ -270,6 +270,17 @@ namespace UfoPuzzle
         
         public void SaveData()
         {
+            for (int i = levelData.ufoData.Count - 1; i > 0; i--)
+            {
+                if (levelData.ufoData[i].color == Color.white || levelData.ufoData[i].color == Color.clear)
+                {
+                    levelData.ufoData.Remove(levelData.ufoData[i]);
+                }
+                else
+                {
+                    break;
+                }
+            }
             string saveData = JsonUtility.ToJson(levelData);
             string filePath = Application.dataPath + $"/Resources/Levels/Level_{level}.json";
             System.IO.File.WriteAllText(filePath, saveData);
@@ -396,35 +407,6 @@ namespace UfoPuzzle
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             return results.Count > 0;
-        }
-        private void moveTriosDown()
-        {
-            List<GameObject> children = new List<GameObject>();
-
-            foreach (Transform child in ufoEditor.transform)
-            {
-                children.Add(child.gameObject);
-            }
-
-            foreach (GameObject trio in children)
-            {
-                trio.transform.position = trio.transform.position - new Vector3(0f, 0f, editorScale);
-            }
-        }
-
-        private void moveTriosUp()
-        {
-            List<GameObject> children = new List<GameObject>();
-
-            foreach (Transform child in ufoEditor.transform)
-            {
-                children.Add(child.gameObject);
-            }
-
-            foreach (GameObject trio in children)
-            {
-                trio.transform.position = trio.transform.position + new Vector3(0f, 0f, editorScale);
-            }
         }
     }
 }
