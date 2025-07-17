@@ -71,7 +71,6 @@ namespace UfoPuzzle
             if(ufoParent != null) Destroy(ufoParent.gameObject);
             
             ufoParent = new GameObject("Ufos").transform;
-            Debug.Log(_ufoData.Count);
             for(int i = 0; i < _ufoData.Count; i++)
             {
                 Ufo newUfo = Instantiate(ufoPrefab, transform.position, quaternion.identity);
@@ -100,7 +99,6 @@ namespace UfoPuzzle
 
         private void SpawnUfo()
         {
-            Debug.Log($"Current ufo count is {ufoCount}");
             Ufo ufoToSpawn = ufoList[ufoCount];
             ufoToSpawn.transform.position = ufoToSpawn.originalPos;
             ufoToSpawn.gameObject.SetActive(true);

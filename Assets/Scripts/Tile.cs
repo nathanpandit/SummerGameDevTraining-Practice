@@ -22,6 +22,7 @@ namespace UfoPuzzle
             circle.transform.SetParent(transform);
             circleRenderer = circle.circleRenderer;
             isVisited = false;
+            circle.gameObject.SetActive(false);
             // meshFilter.mesh = meshes[(position.x + position.y) % meshes.Count];
         }
     }

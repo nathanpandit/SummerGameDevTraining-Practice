@@ -29,7 +29,6 @@ namespace UfoPuzzle
             {
                 // If all positions are valid, snap to the rounded position
                 ufo.gameObject.SetActive(false);
-                Debug.Log("Removed ufo");
                 int nextIndex = ufos.IndexOf(ufo) + 3;
                 foreach (Tile t in HighlightedTiles)
                 {
@@ -42,7 +41,6 @@ namespace UfoPuzzle
                     Ufo newUfo = ufos[nextIndex];
                     newUfo.transform.position = ufo.originalPos;
                     ufos[nextIndex].gameObject.SetActive(true);
-                    Debug.Log("Spawned next ufo from data");
                 }
                 else
                 {
@@ -59,20 +57,17 @@ namespace UfoPuzzle
                 }
                 if (LevelHelper.IsLevelWon())
                 {
-                    Debug.Log($"Congratulations! You won level {LevelHelper.GetCurrentLevel()}!");
-                    LevelHelper.NextLevel();
+                    EventManager.OnLevelWon();
                 }
                 else
                 {
                     List<Ufo> currentUfos = ufos.FindAll(x => x.gameObject.activeSelf == true);
                     if (LevelHelper.IsGameLost(currentUfos, circles))
                     {
-                        Debug.Log($"You lost level {LevelHelper.GetCurrentLevel()}. Try again.");
-                        LevelHelper.currentLevel--;
+                        EventManager.OnLevelLost();
                     }
                 }
 
-                // EventManager.Instance.TriggerEvent(new BlockReleasedEvent(block.spawnTransform));
             }
             else
             {
@@ -86,13 +81,11 @@ namespace UfoPuzzle
         {
             Vector2Int position = new Vector2Int(Mathf.RoundToInt(ufo.transform.position.x),
                 Mathf.RoundToInt(ufo.transform.position.z));
-            Debug.Log($"Looking for tile in {position}");
             if (tiles.Exists(x => x.position == position))
             {
-                Debug.Log($"Found tile in {position}");
                 Tile tile = tiles.FirstOrDefault(x => x.position == position);
-                if (tile.circle.gameObject.activeSelf &&
-                    tile.circle.color == ufo.color)
+                if ((tile.circle.gameObject.activeSelf &&
+                    tile.circle.color == ufo.color) || !tile.circle.gameObject.activeSelf)
                 {
                     HighLightCircle(tile, ufo.color);
                     foreach (Tile t in VisitedTiles)
@@ -120,7 +113,6 @@ namespace UfoPuzzle
 
         public static void HighLightCircle(Tile _tile, Color color)
         {
-            Debug.Log("Entered highlight function");
             _tile.isVisited = true;
             VisitedTiles.Add(_tile);
             if (_tile.circle.gameObject.activeSelf && _tile.circle.color != color)
@@ -135,7 +127,6 @@ namespace UfoPuzzle
             List<Tile> allNeighbors = new List<Tile>();
             Vector2Int position = _tile.position;
 
-            Debug.Log($"Found tile in {position}");
             Tile tile0 = tiles.FirstOrDefault(x => x.position == new Vector2Int(position.x + 1, position.y));
             if(tile0 != null && !tile0.isVisited) allNeighbors.Add(tile0);
             Tile tile1 = tiles.FirstOrDefault(x => x.position == new Vector2Int(position.x, position.y - 1));
@@ -160,5 +151,17 @@ namespace UfoPuzzle
             return results.Count > 0;
         }
         */
+
+        public static void EventManagerOnLevelLost()
+        {
+            Debug.Log($"You lost level {LevelHelper.GetCurrentLevel()}. Try again.");
+            LevelHelper.currentLevel--;
+        }
+
+        public static void EventManagerOnLevelWon()
+        {
+            Debug.Log($"Congratulations! You won level {LevelHelper.GetCurrentLevel()}!");
+            LevelHelper.NextLevel();
+        }
     }
 }

@@ -30,6 +30,9 @@ namespace UfoPuzzle
                 Instantiate(tutorialObject, new Vector3(0, 0, 0), Quaternion.identity);
             } */
             // DragHelper.Initialize(data.tiles);
+
+            EventManager.LevelLost += GameManager.EventManagerOnLevelLost;
+            EventManager.LevelWon += GameManager.EventManagerOnLevelWon;
         }
 
         void Update()

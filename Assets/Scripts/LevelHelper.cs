@@ -9,7 +9,7 @@ namespace UfoPuzzle
     {
         public static int currentLevel = 1;
         public static bool circlesCleared;
-        public static bool thereAreUfos;
+        public static bool thereAreUfos = true;
 
         public static int GetCurrentLevel()
         {
@@ -18,6 +18,9 @@ namespace UfoPuzzle
 
         public static bool IsGameLost(List<Ufo> currentUfos, List<Circle> currentCircles)
         {
+            Debug.Log("Circles cleared: " + circlesCleared);
+            Debug.Log("There are ufos: " + thereAreUfos);
+            Debug.Log("Can remaining ufos win: " + CanRemainingUfosWin(currentUfos, currentCircles));
             return (!circlesCleared && !thereAreUfos) ||
                    (!circlesCleared && !CanRemainingUfosWin(currentUfos, currentCircles));
         }
