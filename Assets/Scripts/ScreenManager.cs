@@ -8,7 +8,7 @@ public class ScreenManager : Singleton<ScreenManager>
     
     void Start()
     {
-        
+        SetCurrentScreen(ScreenType.StartScreen);
     }
 
     void Update()
@@ -16,25 +16,41 @@ public class ScreenManager : Singleton<ScreenManager>
         switch (currentScreenType)
         {
             case ScreenType.StartScreen:
+                currentScreen = startScreen;
                 break;
             
             case ScreenType.WinScreen:
+                currentScreen = winScreen;
                 break;
+            
             case ScreenType.LoseScreen:
+                currentScreen = loseScreen;
                 break;
+            
             case ScreenType.GameScreen:
+                currentScreen = null;
                 break;
+            
             case ScreenType.PauseScreen:
+                currentScreen = pauseScreen;
                 break;
+            
             case ScreenType.ExitScreen:
+                currentScreen = exitScreen;
                 break;
+            
             default:
+                currentScreen.SetActive(false);
                 break;
         }
     }
 
     public void SetCurrentScreen(ScreenType screenType)
     {
+        if(currentScreen != null)
+        {
+            currentScreen.SetActive(false);
+        }
         currentScreenType = screenType;
     }
 }
