@@ -57,14 +57,14 @@ namespace UfoPuzzle
                 }
                 if (LevelHelper.IsLevelWon())
                 {
-                    EventManager.OnLevelWon();
+                    EventManager.Instance().OnLevelWon();
                 }
                 else
                 {
                     List<Ufo> currentUfos = ufos.FindAll(x => x.gameObject.activeSelf == true);
                     if (LevelHelper.IsGameLost(currentUfos, circles))
                     {
-                        EventManager.OnLevelLost();
+                        EventManager.Instance().OnLevelLost();
                     }
                 }
 

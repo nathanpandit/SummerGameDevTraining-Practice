@@ -1,9 +1,9 @@
 using UnityEngine.Events;
 
-public static class EventManager
+public class EventManager : Singleton<EventManager>
 {
-    public static event UnityAction LevelLost;
-    public static event UnityAction LevelWon;
-    public static void OnLevelLost() => LevelLost?.Invoke();
-    public static void OnLevelWon() => LevelWon?.Invoke();
+    public event UnityAction LevelLost;
+    public event UnityAction LevelWon;
+    public void OnLevelLost() => LevelLost?.Invoke();
+    public void OnLevelWon() => LevelWon?.Invoke();
 }

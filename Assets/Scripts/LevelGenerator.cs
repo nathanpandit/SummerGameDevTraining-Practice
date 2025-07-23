@@ -31,8 +31,8 @@ namespace UfoPuzzle
             } */
             // DragHelper.Initialize(data.tiles);
 
-            EventManager.LevelLost += GameManager.EventManagerOnLevelLost;
-            EventManager.LevelWon += GameManager.EventManagerOnLevelWon;
+            EventManager.Instance().LevelLost += GameManager.EventManagerOnLevelLost;
+            EventManager.Instance().LevelWon += GameManager.EventManagerOnLevelWon;
         }
 
         void Update()
