@@ -10,20 +10,19 @@ namespace UfoPuzzle
     {
         private LevelData levelData;
         public Tile tilePrefab;
-        public Slot slotPrefab;
-        private GameObject tutorialObject => Resources.Load<GameObject>("TutorialObject");
+        // private GameObject tutorialObject => Resources.Load<GameObject>("TutorialObject");
         public GameObject levelParent;
-        public Ufo ufoPrefab;
         private int level = 1;
 
         public UfoSpawner ufoSpawner;
 
-        private void Start()
+        public void StartGame()
         {
             Application.targetFrameRate = 60;
             ReadLevelData();
             var data = GenerateLevel();
             GameManager.Initialize(data.Item1, data.Item2, data.Item3);
+            ScreenManager.Instance().SetCurrentScreen(ScreenType.GameScreen);
 
             /*if (levelHelper.GetCurrentLevel() == 1)
             {

@@ -13,35 +13,9 @@ public class ScreenManager : Singleton<ScreenManager>
 
     void Update()
     {
-        switch (currentScreenType)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            case ScreenType.StartScreen:
-                currentScreen = startScreen;
-                break;
-            
-            case ScreenType.WinScreen:
-                currentScreen = winScreen;
-                break;
-            
-            case ScreenType.LoseScreen:
-                currentScreen = loseScreen;
-                break;
-            
-            case ScreenType.GameScreen:
-                currentScreen = null;
-                break;
-            
-            case ScreenType.PauseScreen:
-                currentScreen = pauseScreen;
-                break;
-            
-            case ScreenType.ExitScreen:
-                currentScreen = exitScreen;
-                break;
-            
-            default:
-                currentScreen.SetActive(false);
-                break;
+            SetCurrentScreen(ScreenType.PauseScreen);
         }
     }
 
@@ -52,6 +26,42 @@ public class ScreenManager : Singleton<ScreenManager>
             currentScreen.SetActive(false);
         }
         currentScreenType = screenType;
+        switch (currentScreenType)
+        {
+            case ScreenType.StartScreen:
+                currentScreen = startScreen;
+                currentScreen.SetActive(true);
+                break;
+            
+            case ScreenType.WinScreen:
+                currentScreen = winScreen;
+                currentScreen.SetActive(true);
+                break;
+            
+            case ScreenType.LoseScreen:
+                currentScreen = loseScreen;
+                currentScreen.SetActive(true);
+                break;
+            
+            case ScreenType.GameScreen:
+                currentScreen.SetActive(false);
+                break;
+            
+            case ScreenType.PauseScreen:
+                currentScreen = pauseScreen;
+                currentScreen.SetActive(true);
+                break;
+            
+            case ScreenType.ExitScreen:
+                currentScreen = exitScreen;
+                currentScreen.SetActive(true);
+                break;
+            
+            default:
+                currentScreen.SetActive(false);
+                break;
+        }
+
     }
 }
 
