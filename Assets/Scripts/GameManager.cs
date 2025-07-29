@@ -161,6 +161,7 @@ namespace UfoPuzzle
         public static void EventManagerOnLevelWon()
         {
             Debug.Log($"Congratulations! You won level {LevelHelper.GetCurrentLevel()}!");
+            ScreenManager.Instance().SetCurrentScreen(ScreenType.WinScreen);
             LevelHelper.NextLevel();
         }
     }

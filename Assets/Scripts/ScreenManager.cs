@@ -63,6 +63,14 @@ public class ScreenManager : Singleton<ScreenManager>
         }
 
     }
+    
+    public void DeactivateCurrentScreen()
+    {
+        if (currentScreen != null)
+        {
+            currentScreen.SetActive(false);
+        }
+    }
 }
 
 public enum ScreenType
