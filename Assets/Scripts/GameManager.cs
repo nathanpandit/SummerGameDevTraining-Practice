@@ -93,7 +93,7 @@ namespace UfoPuzzle
                         t.isVisited = false;
                     }
                     VisitedTiles.Clear();
-                    return true;
+                    if (HighlightedTiles.Count > 0) return true;
                 }
             }
             ClearHighLight();
