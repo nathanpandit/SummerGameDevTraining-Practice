@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
-    
+
     public Singleton() {}
 
     private static T _instance;
@@ -20,6 +20,11 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
             }
         }
         return _instance;
+    }
+
+    public void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 
 }
