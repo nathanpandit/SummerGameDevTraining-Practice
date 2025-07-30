@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -8,10 +9,13 @@ public class ScreenManager : MonoBehaviour
     public StartScreen startScreen;
     public WinScreen winScreen;
     public LoseScreen loseScreen;
+
     public PauseScreen pauseScreen;
+
     // public ExitScreen exitScreen;
     public GameObject currentScreen;
     private static ScreenManager _instance;
+    private BaseScreen[] screens;
 
     public static ScreenManager Instance()
     {
@@ -24,11 +28,20 @@ public class ScreenManager : MonoBehaviour
                 _instance = obj.AddComponent<ScreenManager>();
             }
         }
+
         return _instance;
     }
 
     void Awake()
     {
+        screens = GetComponentsInChildren<BaseScreen>(includeInactive: true);
+        Debug.Log(screens.Length);
+        ShowScreen(ScreenType.StartScreen);
+    }
+
+    void Start()
+    {
+        HideAllScreens();
         ShowScreen(ScreenType.StartScreen);
     }
 
@@ -42,50 +55,22 @@ public class ScreenManager : MonoBehaviour
 
     public void ShowScreen(ScreenType screenType)
     {
-        if(currentScreen != null)
+        if (currentScreen != null)
         {
             currentScreen.SetActive(false);
         }
+
         currentScreenType = screenType;
-        switch (currentScreenType)
+        if (screenType == ScreenType.GameScreen)
         {
-            case ScreenType.StartScreen:
-                currentScreen = startScreen.gameObject;
-                currentScreen.SetActive(true);
-                break;
-            
-            case ScreenType.WinScreen:
-                currentScreen = winScreen.gameObject;
-                currentScreen.SetActive(true);
-                break;
-            
-            case ScreenType.LoseScreen:
-                currentScreen = loseScreen.gameObject;
-                currentScreen.SetActive(true);
-                break;
-            
-            case ScreenType.GameScreen:
-                currentScreen.SetActive(false);
-                break;
-            
-            case ScreenType.PauseScreen:
-                currentScreen = pauseScreen.gameObject;
-                currentScreen.SetActive(true);
-                break;
-            
-            /*case ScreenType.ExitScreen:
-                currentScreen = exitScreen;
-                currentScreen.SetActive(true);
-                break;
-                */
-            
-            default:
-                currentScreen.SetActive(false);
-                break;
+            HideCurrentScreen();
+            return;
         }
 
+        currentScreen = screens.FirstOrDefault(s => s.type == currentScreenType)?.gameObject;
+        currentScreen.SetActive(true);
     }
-    
+
     public void HideCurrentScreen()
     {
         if (currentScreen != null)
@@ -97,5 +82,13 @@ public class ScreenManager : MonoBehaviour
     public void SetCurrentScreen(ScreenType screenType)
     {
         currentScreenType = screenType;
+    }
+
+    public void HideAllScreens()
+    {
+        foreach (var screen in screens)
+        {
+            screen.gameObject.SetActive(false);
+        }
     }
 }
