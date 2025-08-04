@@ -16,6 +16,7 @@ public class ScreenManager : MonoBehaviour
     public GameObject currentScreen;
     private static ScreenManager _instance;
     private BaseScreen[] screens;
+    private RootScreen[] roots;
 
     public static ScreenManager Instance()
     {
@@ -35,7 +36,7 @@ public class ScreenManager : MonoBehaviour
     void Awake()
     {
         screens = GetComponentsInChildren<BaseScreen>(includeInactive: true);
-        Debug.Log(screens.Length);
+        roots = GetComponentsInChildren<RootScreen>(includeInactive: true);
         ShowScreen(ScreenType.StartScreen);
     }
 
@@ -79,16 +80,28 @@ public class ScreenManager : MonoBehaviour
         }
     }
 
-    public void SetCurrentScreen(ScreenType screenType)
-    {
-        currentScreenType = screenType;
-    }
-
-    public void HideAllScreens()
+    public void HideAllBaseScreens()
     {
         foreach (var screen in screens)
         {
             screen.gameObject.SetActive(false);
         }
     }
+
+    public void HideAllRootScreens()
+    {
+        foreach(var root in roots)
+        {
+            root.gameObject.SetActive(false);
+        }
+    }
+    
+    public void HideAllScreens()
+    {
+        HideAllBaseScreens();
+        HideAllRootScreens();
+        currentScreen = null;
+    }
+    
+    
 }
