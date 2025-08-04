@@ -55,6 +55,11 @@ namespace UfoPuzzle
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ScreenManager.Instance().ShowScreen(ScreenType.PauseScreen);
+            }
         }
         
         private void HandleUfoSelection(Vector2 touchPosition)

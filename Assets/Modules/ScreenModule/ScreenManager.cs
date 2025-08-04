@@ -6,14 +6,8 @@ using UnityEngine.Rendering.Universal;
 public class ScreenManager : MonoBehaviour
 {
     public ScreenType currentScreenType;
-    public StartScreen startScreen;
-    public WinScreen winScreen;
-    public LoseScreen loseScreen;
-
-    public PauseScreen pauseScreen;
 
     // public ExitScreen exitScreen;
-    public GameObject currentScreen;
     private static ScreenManager _instance;
     private BaseScreen[] screens;
     private RootScreen[] roots;
@@ -37,7 +31,6 @@ public class ScreenManager : MonoBehaviour
     {
         screens = GetComponentsInChildren<BaseScreen>(includeInactive: true);
         roots = GetComponentsInChildren<RootScreen>(includeInactive: true);
-        ShowScreen(ScreenType.StartScreen);
     }
 
     void Start()
@@ -46,37 +39,18 @@ public class ScreenManager : MonoBehaviour
         ShowScreen(ScreenType.StartScreen);
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ShowScreen(ScreenType.PauseScreen);
-        }
-    }
-
     public void ShowScreen(ScreenType screenType)
     {
-        if (currentScreen != null)
-        {
-            currentScreen.SetActive(false);
-        }
-
-        currentScreenType = screenType;
-        if (screenType == ScreenType.GameScreen)
-        {
-            HideCurrentScreen();
-            return;
-        }
-
-        currentScreen = screens.FirstOrDefault(s => s.type == currentScreenType)?.gameObject;
+        var currentScreen = screens.FirstOrDefault(s => s.type == screenType)?.gameObject;
         currentScreen.SetActive(true);
     }
 
-    public void HideCurrentScreen()
+    public void HideScreen(ScreenType screenType)
     {
-        if (currentScreen != null)
+        var screen = screens.FirstOrDefault(s => s.type == screenType)?.gameObject;
+        if (screen != null)
         {
-            currentScreen.SetActive(false);
+            screen.SetActive(false);
         }
     }
 
@@ -100,7 +74,6 @@ public class ScreenManager : MonoBehaviour
     {
         HideAllBaseScreens();
         HideAllRootScreens();
-        currentScreen = null;
     }
     
     

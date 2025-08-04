@@ -22,7 +22,7 @@ namespace UfoPuzzle
             ReadLevelData();
             var data = GenerateLevel();
             GameManager.Initialize(data.Item1, data.Item2, data.Item3);
-            ScreenManager.Instance().ShowScreen(ScreenType.GameScreen);
+            ScreenManager.Instance().HideAllScreens();
 
             /*if (levelHelper.GetCurrentLevel() == 1)
             {

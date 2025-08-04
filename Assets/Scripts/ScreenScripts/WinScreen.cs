@@ -1,21 +1,29 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WinScreen : BaseScreen
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    
+    public Button nextLevelButton;
     void Awake()
     {
         type = ScreenType.WinScreen;
-    }
-    void Start()
-    {
-        
+        nextLevelButton.onClick.AddListener(OnNextLevelButtonClicked);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Initialize(BaseScreenParameter parameter = null)
     {
-        
+        var WinScreenParameters = parameter as WinScreenParameter;
+        var coinCount = WinScreenParameters.coinCount;
     }
+
+    void OnNextLevelButtonClicked()
+    {
+        ScreenManager.Instance().HideScreen(ScreenType.WinScreen);
+    }
+}
+
+public class WinScreenParameter : BaseScreenParameter
+{
+    public int coinCount;
 }

@@ -13,6 +13,11 @@ public class BaseScreen : MonoBehaviour
             anim.SetTrigger("Show");
         }
     }
+
+    public virtual void Initialize(BaseScreenParameter parameter = null)
+    {
+        
+    }
     
     public void onDisable()
     {
@@ -21,5 +26,10 @@ public class BaseScreen : MonoBehaviour
             anim.SetTrigger("Hide");
         }
     }
+
+}
+
+public class BaseScreenParameter 
+{
 
 }
