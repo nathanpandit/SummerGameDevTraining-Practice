@@ -166,7 +166,7 @@ namespace UfoPuzzle
             Debug.Log($"Congratulations! You won level {LevelHelper.GetCurrentLevel()}!");
             ScreenManager.Instance().ShowScreen(ScreenType.WinScreen);
             LevelHelper.NextLevel();
-            InventoryHelper.Instance().ShowCountOnLevelWon(InventoryType.Coin);
+            InventoryTextManager.Instance().ShowCountOnLevelWon(InventoryType.Coin);
             InventoryHelper.Instance().OnWin(InventoryType.Coin);
         }
     }

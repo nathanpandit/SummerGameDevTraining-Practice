@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class InventoryHelper : Singleton<InventoryHelper>
 {
-    private InventoryDataItem[] inventoryDataItems;
+    public InventoryDataItem[] inventoryDataItems;
     [SerializeField] public TextMeshProUGUI coinWonText;
 
     private Dictionary<InventoryType, List<Action<int>>> listeners = new Dictionary<InventoryType, List<Action<int>>>();
@@ -112,15 +112,15 @@ public class InventoryHelper : Singleton<InventoryHelper>
         }
     }
 
-    public void ShowCountOnLevelWon(InventoryType itemType)
+    public int QuantityOfItemsWon(InventoryType itemType)
     {
         InventoryDataItem item = inventoryDataItems.FirstOrDefault(item => item.itemType == itemType);
         if (item != null)
         {
-            int coinsWon = item.quantity - item.quantityOnLevelStart;
-            coinWonText.text = $"You won {coinsWon.ToString()} coins!";
-            coinWonText.gameObject.SetActive(true);
+            return item.quantity - item.quantityOnLevelStart;
         }
+        Debug.LogWarning("Item not found in inventory");
+        return 0;
     }
 
     public bool TrySpend(InventoryType itemType, int quantityToSpend)

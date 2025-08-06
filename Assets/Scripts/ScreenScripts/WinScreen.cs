@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,10 +6,14 @@ public class WinScreen : BaseScreen
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Button nextLevelButton;
+    public Button getRewardButton;
+    public TextMeshProUGUI coinRewardText;
+    public TextMeshProUGUI totalCoinCountText;
     void Awake()
     {
         type = ScreenType.WinScreen;
         nextLevelButton.onClick.AddListener(OnNextLevelButtonClicked);
+        getRewardButton.onClick.AddListener(OnGetRewardButtonClicked);
     }
 
     public override void Initialize(BaseScreenParameter parameter = null)
@@ -17,9 +22,20 @@ public class WinScreen : BaseScreen
         var coinCount = WinScreenParameters.coinCount;
     }
 
+    public void OnEnable()
+    {
+        getRewardButton.gameObject.SetActive(true);
+    }
+
     void OnNextLevelButtonClicked()
     {
         ScreenManager.Instance().HideScreen(ScreenType.WinScreen);
+    }
+
+    void OnGetRewardButtonClicked()
+    {
+        getRewardButton.gameObject.SetActive(false);
+        InventoryTextManager.Instance().GrantReward();
     }
 }
 
