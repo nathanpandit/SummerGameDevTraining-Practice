@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class InventoryHelper : Singleton<InventoryHelper>
 {
     private InventoryDataItem[] inventoryDataItems;
-    
+    [SerializeField] public TextMeshProUGUI coinWonText;
+
     private Dictionary<InventoryType, List<Action<int>>> listeners = new Dictionary<InventoryType, List<Action<int>>>();
 
     void Start()
     {
         inventoryDataItems = GetComponentsInChildren<InventoryDataItem>();
+        coinWonText.gameObject.SetActive(false);
     }
 
     public int GetQuantity(InventoryType itemType)
@@ -83,6 +86,41 @@ public class InventoryHelper : Singleton<InventoryHelper>
     {
         item.quantity -= quantityToRemove;
         Trigger(item.itemType, item.quantity);
+    }
+
+    public void ResetOnLost(InventoryType itemType)
+    {
+        InventoryDataItem item = inventoryDataItems.FirstOrDefault(item => item.itemType == itemType);
+
+        if (item != null)
+        {
+            SetQuantity(item, item.quantityOnLevelStart);
+        }
+    }
+
+    public void OnWin(InventoryType itemType)
+    {
+        InventoryDataItem item = inventoryDataItems.FirstOrDefault(item => item.itemType == itemType);
+
+        if (item != null)
+        {
+            item.quantityOnLevelStart = item.quantity;
+        }
+        else
+        {
+            Debug.Log("Coinless level ? Shouldnt be possible at this point");
+        }
+    }
+
+    public void ShowCountOnLevelWon(InventoryType itemType)
+    {
+        InventoryDataItem item = inventoryDataItems.FirstOrDefault(item => item.itemType == itemType);
+        if (item != null)
+        {
+            int coinsWon = item.quantity - item.quantityOnLevelStart;
+            coinWonText.text = $"You won {coinsWon.ToString()} coins!";
+            coinWonText.gameObject.SetActive(true);
+        }
     }
 
     public bool TrySpend(InventoryType itemType, int quantityToSpend)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -157,6 +158,7 @@ namespace UfoPuzzle
         {
             Debug.Log($"You lost level {LevelHelper.GetCurrentLevel()}. Try again.");
             LevelHelper.currentLevel--;
+            InventoryHelper.Instance().ResetOnLost(InventoryType.Coin);
         }
 
         public static void EventManagerOnLevelWon()
@@ -164,6 +166,8 @@ namespace UfoPuzzle
             Debug.Log($"Congratulations! You won level {LevelHelper.GetCurrentLevel()}!");
             ScreenManager.Instance().ShowScreen(ScreenType.WinScreen);
             LevelHelper.NextLevel();
+            InventoryHelper.Instance().ShowCountOnLevelWon(InventoryType.Coin);
+            InventoryHelper.Instance().OnWin(InventoryType.Coin);
         }
     }
 }
