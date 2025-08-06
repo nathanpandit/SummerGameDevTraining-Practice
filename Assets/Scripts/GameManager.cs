@@ -36,6 +36,7 @@ namespace UfoPuzzle
                     circles.Remove(t.circle);
                 }
                 HighlightedTiles.Clear();
+                InventoryHelper.Instance().AddItem(InventoryType.Coin, 1);
                 if (nextIndex < ufos.Count)
                 {
                     Ufo newUfo = ufos[nextIndex];

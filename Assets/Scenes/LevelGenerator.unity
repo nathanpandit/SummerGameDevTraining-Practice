@@ -212,6 +212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   anim: {fileID: 0}
+  nextLevelButton: {fileID: 692100243}
 --- !u!1 &89154476
 GameObject:
   m_ObjectHideFlags: 0
@@ -1267,19 +1268,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 692100244}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1334910643}
-        m_TargetAssemblyTypeName: ScreenManager, Assembly-CSharp
-        m_MethodName: HideCurrentScreen
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &692100244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2315,11 +2304,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentScreenType: 0
-  startScreen: {fileID: 1337986115}
-  winScreen: {fileID: 22410985}
-  loseScreen: {fileID: 743996237}
-  pauseScreen: {fileID: 1175023576}
-  currentScreen: {fileID: 0}
 --- !u!1 &1337986111
 GameObject:
   m_ObjectHideFlags: 0
