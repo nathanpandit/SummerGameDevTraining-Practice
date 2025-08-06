@@ -60,6 +60,11 @@ namespace UfoPuzzle
             {
                 ScreenManager.Instance().ShowScreen(ScreenType.PauseScreen);
             }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                InventoryHelper.Instance().TrySpend(InventoryType.Coin, 3);
+            }
         }
         
         private void HandleUfoSelection(Vector2 touchPosition)
