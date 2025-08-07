@@ -28,6 +28,17 @@ public class InventoryHelper : Singleton<InventoryHelper>
         return 0;
     }
 
+    public int GetQuantityOnStart(InventoryType itemType)
+    {
+        InventoryDataItem item = inventoryDataItems.FirstOrDefault(data => data.itemType == itemType);
+        if (item != null)
+        {
+            return item.quantityOnLevelStart;
+        }
+
+        return 0;
+    }
+
     public void SetQuantity(InventoryType itemType, int quantityToSet)
     {
         InventoryDataItem item = inventoryDataItems.FirstOrDefault(data => data.itemType == itemType);

@@ -25,6 +25,7 @@ public class WinScreen : BaseScreen
     public void OnEnable()
     {
         getRewardButton.gameObject.SetActive(true);
+        totalCoinCountText.text = InventoryHelper.Instance().GetQuantityOnStart(InventoryType.Coin).ToString();
     }
 
     void OnNextLevelButtonClicked()

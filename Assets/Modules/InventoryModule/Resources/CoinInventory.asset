@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: CoinInventory
   m_EditorClassIdentifier: 
   inventoryType: 0
-  amount: 200
+  quantity: 20
