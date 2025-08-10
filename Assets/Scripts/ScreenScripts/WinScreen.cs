@@ -36,7 +36,7 @@ public class WinScreen : BaseScreen
     void OnGetRewardButtonClicked()
     {
         getRewardButton.gameObject.SetActive(false);
-        InventoryTextManager.Instance().GrantReward();
+        CurveController.Instance().GrantReward();
     }
 }
 
