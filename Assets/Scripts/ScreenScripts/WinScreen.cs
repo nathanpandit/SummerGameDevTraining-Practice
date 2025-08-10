@@ -31,6 +31,7 @@ public class WinScreen : BaseScreen
     void OnNextLevelButtonClicked()
     {
         ScreenManager.Instance().HideScreen(ScreenType.WinScreen);
+        InventoryHelper.Instance().OnWin(InventoryType.Coin);
     }
 
     void OnGetRewardButtonClicked()

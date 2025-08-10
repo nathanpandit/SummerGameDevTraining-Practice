@@ -167,7 +167,6 @@ namespace UfoPuzzle
             ScreenManager.Instance().ShowScreen(ScreenType.WinScreen);
             LevelHelper.NextLevel();
             InventoryTextManager.Instance().ShowCountOnLevelWon(InventoryType.Coin);
-            InventoryHelper.Instance().OnWin(InventoryType.Coin);
         }
     }
 }

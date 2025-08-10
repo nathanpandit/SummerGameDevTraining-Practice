@@ -12,6 +12,7 @@ public class CurveController : Singleton<CurveController>
     [SerializeField] public Vector3 endPosition;
     [SerializeField] public float duration = 1f;
     [SerializeField] public TextMeshProUGUI totalCoinCountText;
+    [SerializeField] public TextMeshProUGUI coinsWonCountText;
     public int numberOfMovements;
 
     public void Awake()
@@ -36,14 +37,21 @@ public class CurveController : Singleton<CurveController>
 
         for (int i = 0; i < numberOfMovements; i++)
         {
+            int iterationIndex = i;
+            GameObject objectInIteration = newObject;
             newObject.transform.DOPath(new Vector3[] { startPosition, controlPoint, endPosition },
                     duration, PathType.CatmullRom)
                 .SetEase(Ease.InOutQuad)
                 .SetDelay(i * 0.2f)
-                .OnComplete(() => onCompleteTween(i, newObject));
-            
-            newObject = Instantiate(objectToMovePrefab, startPosition, Quaternion.identity);
-            newObject.transform.SetParent(transform, true);
+                .OnStart(() => coinsWonCountText.text =
+                    (InventoryHelper.Instance().QuantityOfItemsWon(InventoryType.Coin) - (iterationIndex + 1)).ToString())
+                .OnComplete(() => onCompleteTween(iterationIndex, objectInIteration));
+
+            if (i != numberOfMovements - 1)
+            {
+                newObject = Instantiate(objectToMovePrefab, startPosition, Quaternion.identity);
+                newObject.transform.SetParent(transform, true);
+            }
         }
     }
     
@@ -55,6 +63,8 @@ public class CurveController : Singleton<CurveController>
 
     public void onCompleteTween(int i, GameObject gameObject)
     {
+        Debug.Log(InventoryHelper.Instance().GetQuantityOnStart(InventoryType.Coin));
+        Debug.Log(i);
         totalCoinCountText.text = (InventoryHelper.Instance().GetQuantityOnStart(InventoryType.Coin) + i + 1).ToString();
         Destroy(gameObject);
     }
