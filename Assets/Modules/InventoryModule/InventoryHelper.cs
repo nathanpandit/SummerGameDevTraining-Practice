@@ -6,20 +6,26 @@ using UnityEngine;
 
 public class InventoryHelper : Singleton<InventoryHelper>
 {
-    public InventoryDataItem[] inventoryDataItems;
-    [SerializeField] public TextMeshProUGUI coinWonText;
-
     private Dictionary<InventoryType, List<Action<int>>> listeners = new Dictionary<InventoryType, List<Action<int>>>();
 
-    void Start()
+    private List<InventoryDataItem> _inventoryData;
+
+    public List<InventoryDataItem> inventoryData
     {
-        inventoryDataItems = GetComponentsInChildren<InventoryDataItem>();
-        coinWonText.gameObject.SetActive(false);
+        get
+        {
+            if (_inventoryData == null)
+            {
+                _inventoryData = Resources.Load<InventoryScriptableObjectScript>("CoinInventory").inventoryDataItems;
+            }
+            return _inventoryData;
+        }
     }
+
 
     public int GetQuantity(InventoryType itemType)
     {
-        InventoryDataItem item = inventoryDataItems.FirstOrDefault(data => data.itemType == itemType);
+        InventoryDataItem item = inventoryData.FirstOrDefault(data => data.itemType == itemType);
         if (item != null)
         {
             return item.quantity;
@@ -28,27 +34,16 @@ public class InventoryHelper : Singleton<InventoryHelper>
         return 0;
     }
 
-    public int GetQuantityOnStart(InventoryType itemType)
-    {
-        InventoryDataItem item = inventoryDataItems.FirstOrDefault(data => data.itemType == itemType);
-        if (item != null)
-        {
-            return item.quantityOnLevelStart;
-        }
-
-        return 0;
-    }
-
     public void SetQuantity(InventoryType itemType, int quantityToSet)
     {
-        InventoryDataItem item = inventoryDataItems.FirstOrDefault(data => data.itemType == itemType);
+        InventoryDataItem item = inventoryData.FirstOrDefault(data => data.itemType == itemType);
         if (item != null)
         {
             SetQuantity(item, quantityToSet);
         }
         else
         {
-            InventoryDataItem newItem = gameObject.AddComponent<InventoryDataItem>();
+            InventoryDataItem newItem = new InventoryDataItem();
             newItem.itemType = itemType;
             newItem.quantity = quantityToSet;
             listeners[itemType] = new List<Action<int>>();
@@ -64,7 +59,7 @@ public class InventoryHelper : Singleton<InventoryHelper>
     
     public void AddItem(InventoryType itemType, int quantityToAdd)
     {
-        InventoryDataItem item = inventoryDataItems.FirstOrDefault(data => data.itemType == itemType);
+        InventoryDataItem item = inventoryData.FirstOrDefault(data => data.itemType == itemType);
         
         if (item != null)
         {
@@ -72,15 +67,16 @@ public class InventoryHelper : Singleton<InventoryHelper>
         }
         else
         {
-            InventoryDataItem newItem = gameObject.AddComponent<InventoryDataItem>();
+            InventoryDataItem newItem = new InventoryDataItem();
             newItem.itemType = itemType;
             newItem.quantity = quantityToAdd;
+            listeners[itemType] = new List<Action<int>>();
         }
     }
 
     public void RemoveItem(InventoryType itemType, int quantityToRemove)
     {
-        InventoryDataItem item = inventoryDataItems.FirstOrDefault(data => data.itemType == itemType);
+        InventoryDataItem item = inventoryData.FirstOrDefault(data => data.itemType == itemType);
             
             if (item != null)
             {
@@ -101,42 +97,17 @@ public class InventoryHelper : Singleton<InventoryHelper>
 
     public void ResetOnLost(InventoryType itemType)
     {
-        InventoryDataItem item = inventoryDataItems.FirstOrDefault(item => item.itemType == itemType);
+        InventoryDataItem item = inventoryData.FirstOrDefault(item => item.itemType == itemType);
 
         if (item != null)
         {
-            SetQuantity(item, item.quantityOnLevelStart);
+            SetQuantity(item, item.quantity);
         }
-    }
-
-    public void OnWin(InventoryType itemType)
-    {
-        InventoryDataItem item = inventoryDataItems.FirstOrDefault(item => item.itemType == itemType);
-
-        if (item != null)
-        {
-            item.quantityOnLevelStart = item.quantity;
-        }
-        else
-        {
-            Debug.Log("Coinless level ? Shouldnt be possible at this point");
-        }
-    }
-
-    public int QuantityOfItemsWon(InventoryType itemType)
-    {
-        InventoryDataItem item = inventoryDataItems.FirstOrDefault(item => item.itemType == itemType);
-        if (item != null)
-        {
-            return item.quantity - item.quantityOnLevelStart;
-        }
-        Debug.LogWarning("Item not found in inventory");
-        return 0;
     }
 
     public bool TrySpend(InventoryType itemType, int quantityToSpend)
     {
-        InventoryDataItem item = inventoryDataItems.FirstOrDefault(data => data.itemType == itemType);
+        InventoryDataItem item = inventoryData.FirstOrDefault(data => data.itemType == itemType);
 
         if (item != null)
         {

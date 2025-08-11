@@ -4,12 +4,11 @@ public class InventoryTracker : MonoBehaviour
 {
     [SerializeField] public InventoryType itemType;
     [SerializeField] private TMPro.TextMeshProUGUI text;
-    [SerializeField] public InventoryScriptableObjectScript inventoryScriptableObject;
 
     void Awake()
     {
         text = GetComponent<TMPro.TextMeshProUGUI>();
-        text.text = inventoryScriptableObject.quantity.ToString();
+        text.text = InventoryHelper.Instance().GetQuantity(itemType).ToString();
         InventoryHelper.Instance().AddListener(itemType, UpdateText);
     }
 

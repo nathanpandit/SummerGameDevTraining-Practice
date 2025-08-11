@@ -1,18 +1,19 @@
+using System.Linq;
 using TMPro;
+using UfoPuzzle;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class WinScreen : BaseScreen
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public Button nextLevelButton;
     public Button getRewardButton;
     public TextMeshProUGUI coinRewardText;
     public TextMeshProUGUI totalCoinCountText;
     void Awake()
     {
         type = ScreenType.WinScreen;
-        nextLevelButton.onClick.AddListener(OnNextLevelButtonClicked);
         getRewardButton.onClick.AddListener(OnGetRewardButtonClicked);
     }
 
@@ -25,20 +26,30 @@ public class WinScreen : BaseScreen
     public void OnEnable()
     {
         getRewardButton.gameObject.SetActive(true);
-        totalCoinCountText.text = InventoryHelper.Instance().GetQuantityOnStart(InventoryType.Coin).ToString();
+        totalCoinCountText.text = InventoryHelper.Instance().GetQuantity(InventoryType.Coin).ToString();
+        ShowCountOnLevelWon(InventoryType.Coin);
+        InventoryHelper.Instance().AddItem(InventoryType.Coin, GameManager.coinCount);
     }
-
-    void OnNextLevelButtonClicked()
+    
+    public void ShowCountOnLevelWon(InventoryType itemType)
     {
-        ScreenManager.Instance().HideScreen(ScreenType.WinScreen);
-        InventoryHelper.Instance().OnWin(InventoryType.Coin);
-    }
+            int coinsWon = GameManager.coinCount;
+            coinRewardText.text = (InventoryHelper.Instance().GetQuantity(itemType)-GameManager.coinCount).ToString();
+            coinRewardText.gameObject.SetActive(true);
+        }
 
     void OnGetRewardButtonClicked()
     {
         getRewardButton.gameObject.SetActive(false);
-        CurveController.Instance().GrantReward();
+        CurveController.Instance().GrantReward(onGameWinAction);
     }
+
+    void onGameWinAction()
+    {
+        EventManager.Instance().OnGameStart();
+    }
+    
+    
 }
 
 public class WinScreenParameter : BaseScreenParameter

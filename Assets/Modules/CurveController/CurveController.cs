@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using UfoPuzzle;
 
 public class CurveController : Singleton<CurveController>
 {
@@ -13,6 +15,7 @@ public class CurveController : Singleton<CurveController>
     [SerializeField] public float duration = 1f;
     [SerializeField] public TextMeshProUGUI totalCoinCountText;
     [SerializeField] public TextMeshProUGUI coinsWonCountText;
+    [SerializeField] public AnimationCurve movementCurve;
     public int numberOfMovements;
 
     public void Awake()
@@ -22,7 +25,7 @@ public class CurveController : Singleton<CurveController>
         Debug.Log($"POS1 at awake: {startPosition}");
         Debug.Log($"POS2 at awake: {endPosition}");
     }
-    public void MoveObjectAlongCurve()
+    public void MoveObjectAlongCurve(Action onComplete = null)
     {
         if (objectToMove == null || startPoint == null || endPoint == null)
         {
@@ -35,17 +38,18 @@ public class CurveController : Singleton<CurveController>
 
         Vector3 controlPoint = (startPosition + endPosition) / 2 + Vector3.up * 2f; // Adjust the height of the curve
 
+        Sequence seq = DOTween.Sequence();
+
         for (int i = 0; i < numberOfMovements; i++)
         {
             int iterationIndex = i;
             GameObject objectInIteration = newObject;
-            newObject.transform.DOPath(new Vector3[] { startPosition, controlPoint, endPosition },
+            seq.Insert(0.2f*i,newObject.transform.DOPath(new Vector3[] { startPosition, controlPoint, endPosition },
                     duration, PathType.CatmullRom)
-                .SetEase(Ease.InOutQuad)
-                .SetDelay(i * 0.2f)
+                .SetEase(movementCurve)
                 .OnStart(() => coinsWonCountText.text =
-                    (InventoryHelper.Instance().QuantityOfItemsWon(InventoryType.Coin) - (iterationIndex + 1)).ToString())
-                .OnComplete(() => onCompleteTween(iterationIndex, objectInIteration));
+                    (GameManager.coinCount - (iterationIndex + 1)).ToString())
+                .OnComplete(() => onCompleteTween(iterationIndex, objectInIteration)));
 
             if (i != numberOfMovements - 1)
             {
@@ -53,19 +57,23 @@ public class CurveController : Singleton<CurveController>
                 newObject.transform.SetParent(transform, true);
             }
         }
+        seq.OnComplete(() => 
+        {
+            Debug.Log("All movements completed.");
+            onComplete?.Invoke();
+        });
     }
     
-    public void GrantReward()
+    public void GrantReward(Action onComplete = null)
     {
-        numberOfMovements = InventoryTextManager.Instance().coinsWon;
-        MoveObjectAlongCurve();
+        numberOfMovements = GameManager.coinCount;
+        Debug.Log($"Number of movements: {numberOfMovements}");;
+        MoveObjectAlongCurve(onComplete);
     }
 
     public void onCompleteTween(int i, GameObject gameObject)
     {
-        Debug.Log(InventoryHelper.Instance().GetQuantityOnStart(InventoryType.Coin));
-        Debug.Log(i);
-        totalCoinCountText.text = (InventoryHelper.Instance().GetQuantityOnStart(InventoryType.Coin) + i + 1).ToString();
+        totalCoinCountText.text = (InventoryHelper.Instance().GetQuantity(InventoryType.Coin) - GameManager.coinCount + i + 1).ToString();
         Destroy(gameObject);
     }
 }

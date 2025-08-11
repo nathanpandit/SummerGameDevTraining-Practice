@@ -16,22 +16,27 @@ namespace UfoPuzzle
 
         public UfoSpawner ufoSpawner;
 
-        public void StartGame()
+        public void Awake()
+        {
+            EventManager.Instance().LevelLost += GameManager.EventManagerOnLevelLost;
+            EventManager.Instance().LevelWon += GameManager.EventManagerOnLevelWon;
+            EventManager.Instance().GameStart += Start;
+        }
+
+        public void OnDestroy()
+        {
+            EventManager.Instance().LevelLost -= GameManager.EventManagerOnLevelLost;
+            EventManager.Instance().LevelWon -= GameManager.EventManagerOnLevelWon;
+            EventManager.Instance().GameStart -= Start;
+        }
+
+        public void Start()
         {
             Application.targetFrameRate = 60;
             ReadLevelData();
             var data = GenerateLevel();
             GameManager.Initialize(data.Item1, data.Item2, data.Item3);
             ScreenManager.Instance().HideAllScreens();
-
-            /*if (levelHelper.GetCurrentLevel() == 1)
-            {
-                Instantiate(tutorialObject, new Vector3(0, 0, 0), Quaternion.identity);
-            } */
-            // DragHelper.Initialize(data.tiles);
-
-            EventManager.Instance().LevelLost += GameManager.EventManagerOnLevelLost;
-            EventManager.Instance().LevelWon += GameManager.EventManagerOnLevelWon;
         }
 
         void Update()
@@ -49,21 +54,6 @@ namespace UfoPuzzle
             {
                 LevelHelper.currentLevel--;
                 level--;
-                ReadLevelData();
-                var data = GenerateLevel();
-                GameManager.Initialize(data.Item1, data.Item2, data.Item3);
-            }
-
-            if (LevelHelper.currentLevel > level)
-            {
-                level++;
-                ReadLevelData();
-                var data = GenerateLevel();
-                GameManager.Initialize(data.Item1, data.Item2, data.Item3);
-            }
-            else if (LevelHelper.currentLevel < level)
-            {
-                LevelHelper.NextLevel();
                 ReadLevelData();
                 var data = GenerateLevel();
                 GameManager.Initialize(data.Item1, data.Item2, data.Item3);

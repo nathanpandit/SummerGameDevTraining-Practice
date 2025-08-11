@@ -15,12 +15,14 @@ namespace UfoPuzzle
         public static List<Ufo> ufos = new List<Ufo>();
         public static List<Tile> HighlightedTiles = new List<Tile>();
         public static List<Tile> VisitedTiles = new List<Tile>();
+        public static int coinCount;
 
         public static void Initialize(List<Tile> _tiles, List<Circle> _circles, List<Ufo> _ufos)
         {
             tiles = _tiles;
             circles = _circles;
             ufos = _ufos;
+            coinCount = 0;
         }
         
         public static void HandleUfoRelease(Ufo ufo)
@@ -37,7 +39,7 @@ namespace UfoPuzzle
                     circles.Remove(t.circle);
                 }
                 HighlightedTiles.Clear();
-                InventoryHelper.Instance().AddItem(InventoryType.Coin, 1);
+                coinCount++;
                 if (nextIndex < ufos.Count)
                 {
                     Ufo newUfo = ufos[nextIndex];
@@ -166,7 +168,6 @@ namespace UfoPuzzle
             Debug.Log($"Congratulations! You won level {LevelHelper.GetCurrentLevel()}!");
             ScreenManager.Instance().ShowScreen(ScreenType.WinScreen);
             LevelHelper.NextLevel();
-            InventoryTextManager.Instance().ShowCountOnLevelWon(InventoryType.Coin);
         }
     }
 }

@@ -1,9 +1,16 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "InventoryScriptableObject", menuName = "ScriptableObjects/InventoryScriptableObject")]
 
 public class InventoryScriptableObjectScript : ScriptableObject
 {
-    public InventoryType inventoryType;
+    public List<InventoryDataItem> inventoryDataItems;
+}
+
+[SerializeField]
+public class InventoryDataItem
+{
+    public InventoryType itemType;
     public int quantity;
 }
