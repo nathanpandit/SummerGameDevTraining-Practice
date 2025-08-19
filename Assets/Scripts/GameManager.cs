@@ -159,8 +159,8 @@ namespace UfoPuzzle
         public static void EventManagerOnLevelLost()
         {
             Debug.Log($"You lost level {LevelHelper.GetCurrentLevel()}. Try again.");
-            LevelHelper.currentLevel--;
             InventoryHelper.Instance().ResetOnLost(InventoryType.Coin);
+            ScreenManager.Instance().ShowScreen(ScreenType.LoseScreen);
         }
 
         public static void EventManagerOnLevelWon()

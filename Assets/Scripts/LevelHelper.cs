@@ -11,6 +11,12 @@ namespace UfoPuzzle
         public static bool circlesCleared;
         public static bool thereAreUfos = true;
 
+        public static void Initialize(bool _circlesCleared, bool _thereAreUfos)
+        {
+            circlesCleared = _circlesCleared;
+            thereAreUfos = _thereAreUfos;
+        }
+
         public static int GetCurrentLevel()
         {
             return currentLevel;

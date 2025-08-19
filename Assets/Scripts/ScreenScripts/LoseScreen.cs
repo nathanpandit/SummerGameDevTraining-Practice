@@ -1,21 +1,21 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoseScreen : BaseScreen
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     
+    [SerializeField] public Button retryButton;
+    
     void Awake()
     {
         type = ScreenType.LoseScreen;
-    }
-    void Start()
-    {
-        
+        retryButton.onClick.AddListener(OnRetryButtonClicked);
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnRetryButtonClicked()
     {
-        
+        EventManager.Instance().OnGameStart();
     }
 }

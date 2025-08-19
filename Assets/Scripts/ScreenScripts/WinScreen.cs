@@ -29,6 +29,7 @@ public class WinScreen : BaseScreen
         Debug.Log($"Setting total coin count text to: {InventoryHelper.Instance().GetQuantity(InventoryType.Coin)}");
         totalCoinCountText.text = InventoryHelper.Instance().GetQuantity(InventoryType.Coin).ToString();
         ShowCountOnLevelWon(InventoryType.Coin);
+        InventoryHelper.Instance().AddItem(InventoryType.Coin, GameManager.coinCount);
     }
 
     public void ShowCountOnLevelWon(InventoryType itemType)
