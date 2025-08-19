@@ -58,6 +58,7 @@ public class ScreenManager : MonoBehaviour
     {
         foreach (var screen in screens)
         {
+            Debug.Log("Setting screen " + screen.type + " to inactive");
             screen.gameObject.SetActive(false);
         }
     }

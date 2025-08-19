@@ -9,11 +9,13 @@ public static class HoldToSee
 {
     [SerializeField] public static Image[] images;
     [SerializeField] public static TextMeshProUGUI[] texts;
+    private static Transform screenParent;
 
     public static void Initialize()
     {
-        images = ScreenManager.Instance().gameObject.GetComponentsInChildren<Image>(includeInactive:true);
-        texts = ScreenManager.Instance().gameObject.GetComponentsInChildren<TextMeshProUGUI>(includeInactive:true);
+        screenParent = ScreenManager.Instance().GetComponentInChildren<LoseScreen>(includeInactive:true).gameObject.transform;
+        images = screenParent.GetComponentsInChildren<Image>(includeInactive:true);
+        texts = screenParent.GetComponentsInChildren<TextMeshProUGUI>(includeInactive:true);
     }
     
 

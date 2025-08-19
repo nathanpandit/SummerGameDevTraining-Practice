@@ -38,6 +38,7 @@ namespace UfoPuzzle
             GameManager.Initialize(data.Item1, data.Item2, data.Item3);
             LevelHelper.Initialize(false, true);
             HoldToSee.Initialize();
+            Debug.Log("DOES THE CODE REACH HERE");
             ScreenManager.Instance().HideAllScreens();
         }
 
