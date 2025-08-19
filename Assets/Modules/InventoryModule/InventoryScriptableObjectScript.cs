@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class InventoryScriptableObjectScript : ScriptableObject
 {
-    public List<InventoryDataItem> inventoryDataItems;
+    public List<InventoryDataItem> inventoryDataItems = new();
 }
 
 [SerializeField]

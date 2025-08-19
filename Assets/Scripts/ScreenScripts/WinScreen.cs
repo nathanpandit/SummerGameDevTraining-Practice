@@ -26,15 +26,15 @@ public class WinScreen : BaseScreen
     public void OnEnable()
     {
         getRewardButton.gameObject.SetActive(true);
+        Debug.Log($"Setting total coin count text to: {InventoryHelper.Instance().GetQuantity(InventoryType.Coin)}");
         totalCoinCountText.text = InventoryHelper.Instance().GetQuantity(InventoryType.Coin).ToString();
         ShowCountOnLevelWon(InventoryType.Coin);
-        InventoryHelper.Instance().AddItem(InventoryType.Coin, GameManager.coinCount);
     }
-    
+
     public void ShowCountOnLevelWon(InventoryType itemType)
     {
             int coinsWon = GameManager.coinCount;
-            coinRewardText.text = (InventoryHelper.Instance().GetQuantity(itemType)-GameManager.coinCount).ToString();
+            coinRewardText.text = (GameManager.coinCount).ToString();
             coinRewardText.gameObject.SetActive(true);
         }
 

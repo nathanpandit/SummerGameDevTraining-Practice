@@ -30,7 +30,7 @@ public class InventoryHelper : Singleton<InventoryHelper>
         {
             return item.quantity;
         }
-
+        Debug.Log("Item is null, returning 0");
         return 0;
     }
 
@@ -46,6 +46,7 @@ public class InventoryHelper : Singleton<InventoryHelper>
             InventoryDataItem newItem = new InventoryDataItem();
             newItem.itemType = itemType;
             newItem.quantity = quantityToSet;
+            inventoryData.Add(newItem);
             listeners[itemType] = new List<Action<int>>();
         }
     }
@@ -54,7 +55,7 @@ public class InventoryHelper : Singleton<InventoryHelper>
     public void SetQuantity(InventoryDataItem item, int quantityToSet)
     {
         item.quantity = quantityToSet;
-        Trigger(item.itemType, item.quantity);
+        // Trigger(item.itemType, item.quantity);
     }
     
     public void AddItem(InventoryType itemType, int quantityToAdd)
@@ -70,6 +71,7 @@ public class InventoryHelper : Singleton<InventoryHelper>
             InventoryDataItem newItem = new InventoryDataItem();
             newItem.itemType = itemType;
             newItem.quantity = quantityToAdd;
+            inventoryData.Add(newItem);
             listeners[itemType] = new List<Action<int>>();
         }
     }

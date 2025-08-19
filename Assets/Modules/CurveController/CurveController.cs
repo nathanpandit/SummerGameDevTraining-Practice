@@ -73,7 +73,7 @@ public class CurveController : Singleton<CurveController>
 
     public void onCompleteTween(int i, GameObject gameObject)
     {
-        totalCoinCountText.text = (InventoryHelper.Instance().GetQuantity(InventoryType.Coin) - GameManager.coinCount + i + 1).ToString();
+        totalCoinCountText.text = (InventoryHelper.Instance().GetQuantity(InventoryType.Coin) + i + 1).ToString();
         Destroy(gameObject);
     }
 }
