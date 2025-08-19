@@ -37,6 +37,7 @@ namespace UfoPuzzle
             var data = GenerateLevel();
             GameManager.Initialize(data.Item1, data.Item2, data.Item3);
             LevelHelper.Initialize(false, true);
+            HoldToSee.Initialize();
             ScreenManager.Instance().HideAllScreens();
         }
 

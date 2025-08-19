@@ -65,6 +65,16 @@ namespace UfoPuzzle
             {
                 InventoryHelper.Instance().TrySpend(InventoryType.Coin, 3);
             }
+
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                HoldToSee.FadeOut();
+            }
+            
+            if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                HoldToSee.FadeIn();
+            }
         }
         
         private void HandleUfoSelection(Vector2 touchPosition)
