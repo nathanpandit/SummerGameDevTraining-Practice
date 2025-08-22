@@ -75,5 +75,6 @@ public class CurveController : Singleton<CurveController>
     {
         totalCoinCountText.text = (InventoryHelper.Instance().GetQuantity(InventoryType.Coin) + i + 1 - GameManager.coinCount).ToString();
         Destroy(gameObject);
+        AudioManager.Instance().PlaySound(SoundType.Coin);
     }
 }

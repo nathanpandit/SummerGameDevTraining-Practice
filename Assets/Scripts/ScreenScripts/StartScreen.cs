@@ -8,25 +8,25 @@ public class StartScreen : BaseScreen
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     public Button startGameButton;
-    
+
     void Awake()
     {
         type = ScreenType.StartScreen;
         startGameButton.onClick.AddListener(OnStartGameButtonClicked);
     }
-    void Start()
+
+    void OnEnable()
     {
-        
+        AudioManager.Instance().PlayMusic(MusicType.StartMenu);
+    }
+
+    void OnDisable()
+    {
+        AudioManager.Instance().StopPlayingMusic();
     }
 
     public void OnStartGameButtonClicked()
     {
         ScreenManager.Instance().HideScreen(ScreenType.StartScreen);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

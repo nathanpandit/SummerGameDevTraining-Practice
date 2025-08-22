@@ -168,6 +168,7 @@ namespace UfoPuzzle
             Debug.Log($"Congratulations! You won level {LevelHelper.GetCurrentLevel()}!");
             ScreenManager.Instance().ShowScreen(ScreenType.WinScreen);
             LevelHelper.NextLevel();
+            AudioManager.Instance().PlaySound(SoundType.Win);
         }
     }
 }

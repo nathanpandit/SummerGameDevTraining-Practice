@@ -30,6 +30,12 @@ public class WinScreen : BaseScreen
         totalCoinCountText.text = InventoryHelper.Instance().GetQuantity(InventoryType.Coin).ToString();
         ShowCountOnLevelWon(InventoryType.Coin);
         InventoryHelper.Instance().AddItem(InventoryType.Coin, GameManager.coinCount);
+        AudioManager.Instance().PlayMusic(MusicType.WinScreen);
+    }
+
+    public void OnDisable()
+    {
+        AudioManager.Instance().StopPlayingMusic();
     }
 
     public void ShowCountOnLevelWon(InventoryType itemType)
